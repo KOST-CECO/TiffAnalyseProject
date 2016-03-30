@@ -1,0 +1,26 @@
+Anleitung zu GIT 
+
+# GIT: Settings für Kommandozeile
+git config --global user.name=mkaiser56
+git config --global user.email=m.kaiser@access.ch
+git config --global core.editor=pspad.cmd
+git config --global http.proxy proxy.edi.admin.ch:8080
+git config --list
+
+SET TERM=xterm
+
+# Neues Arbeitsverzeichnis anlegen
+git clone https://github.com/KOST-CECO/csv2siard.git _workbench
+cd _workbench
+
+# Repository überprüfen
+gitk
+git status
+git add
+git commit –a
+git push
+
+# file .gitignore
+Thumbs.db
+*.lnk
+*.exe
