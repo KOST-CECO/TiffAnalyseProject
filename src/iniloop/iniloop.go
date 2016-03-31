@@ -8,16 +8,20 @@ import (
 
 func main() {
 	// read initial parameter from command line
-	if len(os.Args) == 2 {
-		fi, err := os.Stat(os.Args[1])
-		if (err != nil) && fi.IsDir() {
-			doloop(fi.Name() + "/")
-		} else {
-			fmt.Println("error: " + os.Args[1] + " is not a valid folder name")
-		}
-	} else {
+	if len(os.Args) != 2 {
 		fmt.Println("usage: " + os.Args[0] + " [folder]")
+		os.Exit(-1)
 	}
+	fi, err := os.Stat(os.Args[1])
+	switch {
+	case err != nil:
+		break
+	case fi.IsDir():
+		doloop(fi.Name() + "/")
+		os.Exit(0)
+	}
+	fmt.Println("error: " + os.Args[1] + " is not a valid folder name")
+	os.Exit(-1)
 }
 
 func doloop(dir string) {
