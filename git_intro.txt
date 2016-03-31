@@ -1,11 +1,11 @@
 Anleitung zu GIT 
 
 # GIT: Settings für Kommandozeile
-git config --global user.name=mkaiser56
-git config --global user.email=m.kaiser@access.ch
-git config --global core.editor=pspad.cmd
-git config --global http.proxy proxy.edi.admin.ch:8080
-git config --list
+git config -l
+git config user.name mkaiser56
+git config user.email m.kaiser@access.ch
+git config core.editor pspad.cmd
+git config http.proxy proxy.edi.admin.ch:8080
 
 SET TERM=xterm
 
