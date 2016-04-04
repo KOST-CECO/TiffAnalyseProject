@@ -12,6 +12,7 @@ func main() {
 		fmt.Println("usage: " + os.Args[0] + " [folder]")
 		os.Exit(-1)
 	}
+	// check for valid folder
 	fi, err := os.Stat(os.Args[1])
 	switch {
 	case err != nil:
