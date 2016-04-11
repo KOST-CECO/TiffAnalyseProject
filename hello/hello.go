@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	"stringutil"
+	"github.com/KOST-CECO/TiffAnalyseProject/stringutil"
 )
 
 func main() {
