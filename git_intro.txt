@@ -4,7 +4,7 @@ Anleitung zu GIT
 git config -l
 git config user.name mkaiser56
 git config user.email m.kaiser@access.ch
-git config core.editor pspad.cmd
+git config core.editor notepad.cmd
 git config http.proxy proxy.edi.admin.ch:8080
 
 SET TERM=xterm
