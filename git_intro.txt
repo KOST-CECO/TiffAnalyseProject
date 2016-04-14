@@ -6,6 +6,9 @@ git config user.name mkaiser56
 git config user.email m.kaiser@access.ch
 git config core.editor notepad
 git config http.proxy proxy.edi.admin.ch:8080
+  
+# git config --global push.default matching
+git config --global push.default simple
 
 SET TERM=xterm
 
