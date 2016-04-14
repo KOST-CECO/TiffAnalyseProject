@@ -7,7 +7,7 @@ import (
 	"os"
 )
 
-// Recursion through a folder tree
+// Read all files in a Folder and recurse through subsequent folders
 func Doloop(dir string) {
 	files, _ := ioutil.ReadDir(dir)
 
@@ -15,6 +15,7 @@ func Doloop(dir string) {
 		// ignore hidden files and folder
 		if (f.Name()[0:1]) != "." {
 			if f.IsDir() {
+				// subsequent folder detected
 				Doloop(dir + f.Name() + string(os.PathSeparator))
 			} else {
 				fmt.Println(dir + f.Name())
