@@ -30,10 +30,10 @@ func main() {
 	// check for valid file
 	fi, fierr := os.Stat(os.Args[2])
 	if fierr != nil {
-		log.Fatal("err: " + os.Args[2] + " is not a valid file name")
+		log.Fatal("err: " + os.Args[2] + " is not a valid database name")
 	}
 	if !fi.Mode().IsRegular() {
-		log.Fatal("err: " + os.Args[2] + " is not a file")
+		log.Fatal("err: " + os.Args[2] + " is not a database file")
 	}
 
 	// check for valid sqlite3 database
@@ -42,9 +42,19 @@ func main() {
 		log.Fatal("err: " + os.Args[2] + " is not a sqlite3 database")
 	}
 	defer db.Close()
+	// select max(id) from keyfile
+	sqlStmt := `select count(id) from keyfile;`
+	_, err = db.Exec(sqlStmt)
+	if err != nil {
+		log.Printf("%q: %s\n", err, sqlStmt)
+		log.Fatal("err: " + os.Args[2] + " is not valide sqlite3 database")
+	}
 
 	// run folder walk
-	path := filepath.Clean(os.Args[1])
+	path, err := filepath.Abs(os.Args[1])
+	if err != nil {
+		log.Fatal(err)
+	}
 	looputil.Doloop(path + string(os.PathSeparator))
 	os.Exit(0)
 
