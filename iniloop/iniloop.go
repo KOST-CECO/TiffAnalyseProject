@@ -2,8 +2,10 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
 	"os"
+	"path/filepath"
+
+	"github.com/KOST-CECO/TiffAnalyseProject/looputil"
 )
 
 func main() {
@@ -18,26 +20,10 @@ func main() {
 	case err != nil:
 		break
 	case fi.IsDir():
-		doloop(fi.Name() + "/")
+		path := filepath.Clean(os.Args[1])
+		looputil.Doloop(path + string(os.PathSeparator))
 		os.Exit(0)
 	}
 	fmt.Println("error: " + os.Args[1] + " is not a valid folder name")
 	os.Exit(-1)
-}
-
-func doloop(dir string) {
-	files, _ := ioutil.ReadDir(dir)
-
-	for _, f := range files {
-		// ignore hidden files and folder
-		if (f.Name()[0:1]) != "." {
-			if f.IsDir() {
-				doloop(dir + f.Name() + "/")
-			} else {
-				fmt.Println(dir + f.Name())
-			}
-
-		}
-
-	}
 }

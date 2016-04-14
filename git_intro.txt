@@ -10,8 +10,8 @@ git config http.proxy proxy.edi.admin.ch:8080
 SET TERM=xterm
 
 # Neues Arbeitsverzeichnis anlegen
-git clone https://github.com/KOST-CECO/csv2siard.git _workbench
-cd _workbench
+git clone https://github.com/KOST-CECO/TiffAnalyseProject.git TiffAnalyseProject
+cd TiffAnalyseProject
 
 # Repository überprüfen
 gitk
