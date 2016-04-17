@@ -104,16 +104,31 @@ func procfile(dir string, file os.FileInfo, TapDb *sql.DB) {
 		log.Fatal(err)
 	}
 
-	stmt, err := tx.Prepare("INSERT INTO namefile (id, serverame, filepath, filename) VALUES (?, ?, ?, ?)")
+	stmt1, err := tx.Prepare("INSERT INTO namefile (id, serverame, filepath, filename) VALUES (?, ?, ?, ?)")
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer stmt.Close()
+	defer stmt1.Close()
 
-	_, err = stmt.Exec(KeyCounter, filepath.VolumeName(dir), dir, file.Name())
+	_, err = stmt1.Exec(KeyCounter, filepath.VolumeName(dir), dir, file.Name())
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	// compute md5 of file
+	// http://dev.pawelsz.eu/2014/11/google-golang-compute-md5-of-file.html
+	// https://www.socketloop.com/tutorials/how-to-generate-checksum-for-file-in-go
+	stmt2, err := tx.Prepare("INSERT INTO keyfile (id, creationtime, filesize) VALUES (?, ?, ?)")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer stmt2.Close()
+
+	_, err = stmt2.Exec(KeyCounter, file.ModTime(), file.Size())
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	tx.Commit()
 
 	fmt.Println(dir + file.Name())

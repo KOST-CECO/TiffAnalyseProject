@@ -50,12 +50,12 @@ CREATE TABLE namefile (
 
 -- Tabellenstruktur für Tabelle keyfile ----------------------------------------
 CREATE TABLE keyfile (
-	id INTEGER NOT NULL,		-- Referenz
-	md5 VARCHAR(32) NOT NULL,		-- MD5 Hashwert
+	id INTEGER NOT NULL,			-- Referenz
+	md5 VARCHAR(32),			-- MD5 Hashwert
 	creationtime DATETIME DEFAULT NULL,	-- Entstehungszeitpunkt der Datei laut Dateisystem
 	filesize LONG DEFAULT NULL,		-- Dateigrösse in Byte
 	pdate DATETIME DEFAULT NULL,		-- Zeitpunkt für den Abschluss der Analyse
-	loccounter INTEGER DEFAULT 0,		-- Zähler für "logfile" bzw. "sysfile" Logrotation beginnend mit 1
+	loccounter INTEGER DEFAULT 1,		-- Zähler für "logfile" bzw. "sysfile" Logrotation beginnend mit 1
 	PRIMARY KEY (md5),
 	FOREIGN KEY(id) REFERENCES namefile(id),
 	FOREIGN KEY(loccounter) REFERENCES logrotate(loccounter)
