@@ -6,9 +6,10 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
-	"os/exec"
+	//"os/exec"
 	"path/filepath"
 
+	"github.com/KOST-CECO/TiffAnalyseProject/util"
 	_ "github.com/mattn/go-sqlite3"
 )
 
@@ -16,12 +17,12 @@ import (
 var KeyCounter int32 = 0 // holds the latest id used in namefile and keyfile
 
 func main() {
-	// for test purpose only
-	cmd := exec.Command("C:/Tools/PCUnixUtils/cp.exe", "tab_backup.db", "tap.db")
+	/* copy empty tap db for test purpose only
+	cmd := exec.Command("C:/Tools/PCUnixUtils/cp.exe", "tap_backup.db", "tap.db")
 	err := cmd.Run()
 	if err != nil {
 		log.Fatal(err)
-	}
+	} */
 
 	// read initial parameter from command line
 	if len(os.Args) != 3 {
@@ -47,23 +48,15 @@ func main() {
 		log.Fatal(os.Args[2] + " is not a database file")
 	}
 
-	// check for valid sqlite3 database and open database
+	// open sqlite3 database
 	TapDb, err := sql.Open("sqlite3", os.Args[2])
 	if err != nil {
 		log.Fatal(os.Args[2] + " is not a sqlite3 database")
 	}
 	defer TapDb.Close()
 
-	rows, err := TapDb.Query("SELECT MAX(id) FROM keyfile")
-	if err != nil {
-		log.Print(err)
-		log.Fatal(os.Args[2] + " is not valide TAP database")
-	}
-	defer rows.Close()
-	for rows.Next() {
-		rows.Scan(&KeyCounter)
-		fmt.Println(KeyCounter)
-	}
+	// check for valid sqlite3 database and read max id
+	KeyCounter = util.Checkdb(TapDb)
 
 	// run folder walk
 	path, err := filepath.Abs(os.Args[1])
@@ -118,6 +111,7 @@ func procfile(dir string, file os.FileInfo, TapDb *sql.DB) {
 	// compute md5 of file
 	// http://dev.pawelsz.eu/2014/11/google-golang-compute-md5-of-file.html
 	// https://www.socketloop.com/tutorials/how-to-generate-checksum-for-file-in-go
+
 	stmt2, err := tx.Prepare("INSERT INTO keyfile (id, creationtime, filesize) VALUES (?, ?, ?)")
 	if err != nil {
 		log.Fatal(err)

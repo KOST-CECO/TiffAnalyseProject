@@ -56,6 +56,7 @@ CREATE TABLE keyfile (
 	filesize LONG DEFAULT NULL,		-- Dateigrösse in Byte
 	pdate DATETIME DEFAULT NULL,		-- Zeitpunkt für den Abschluss der Analyse
 	loccounter INTEGER DEFAULT 1,		-- Zähler für "logfile" bzw. "sysfile" Logrotation beginnend mit 1
+	mimetype VARCHAR(255) DEFAULT NULL,	-- Internet Media Type, auch MIME-Type aufgrund der Magic Number
 	PRIMARY KEY (md5),
 	FOREIGN KEY(id) REFERENCES namefile(id),
 	FOREIGN KEY(loccounter) REFERENCES logrotate(loccounter)
