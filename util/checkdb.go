@@ -3,7 +3,6 @@ package util
 
 import (
 	"database/sql"
-	"fmt"
 	"log"
 	"os"
 
@@ -23,7 +22,6 @@ func Checkdb(db *sql.DB) int32 {
 
 	for rows.Next() {
 		rows.Scan(&cnt)
-		fmt.Println(cnt)
 	}
 
 	return int32(cnt)

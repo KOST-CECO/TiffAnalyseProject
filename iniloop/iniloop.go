@@ -16,6 +16,7 @@ import (
 // global variable definitions
 var KeyCounter int32 = 0 // holds the latest id used in namefile and keyfile
 
+// read prog arguments, test database and start directory walk
 func main() {
 	/* copy empty tap db for test purpose only
 	cmd := exec.Command("C:/Tools/PCUnixUtils/cp.exe", "tap_backup.db", "tap.db")
@@ -90,8 +91,9 @@ func procloop(dir string, TapDb *sql.DB) {
 
 // write FileInfo in database namefile and keyfile
 func procfile(dir string, file os.FileInfo, TapDb *sql.DB) {
-	KeyCounter = KeyCounter + 1
+	id := KeyCounter + 1
 
+	// start transaction
 	tx, err := TapDb.Begin()
 	if err != nil {
 		log.Fatal(err)
@@ -103,14 +105,12 @@ func procfile(dir string, file os.FileInfo, TapDb *sql.DB) {
 	}
 	defer stmt1.Close()
 
-	_, err = stmt1.Exec(KeyCounter, filepath.VolumeName(dir), dir, file.Name())
+	_, err = stmt1.Exec(id, filepath.VolumeName(dir), dir, file.Name())
 	if err != nil {
-		log.Fatal(err)
+		tx.Commit()
+		log.Println("allready entered: " + dir + file.Name())
+		return
 	}
-
-	// compute md5 of file
-	// http://dev.pawelsz.eu/2014/11/google-golang-compute-md5-of-file.html
-	// https://www.socketloop.com/tutorials/how-to-generate-checksum-for-file-in-go
 
 	stmt2, err := tx.Prepare("INSERT INTO keyfile (id, creationtime, filesize) VALUES (?, ?, ?)")
 	if err != nil {
@@ -118,12 +118,13 @@ func procfile(dir string, file os.FileInfo, TapDb *sql.DB) {
 	}
 	defer stmt2.Close()
 
-	_, err = stmt2.Exec(KeyCounter, file.ModTime(), file.Size())
+	_, err = stmt2.Exec(id, file.ModTime(), file.Size())
 	if err != nil {
 		log.Fatal(err)
 	}
-
+	// end transaction
+	KeyCounter = KeyCounter + 1
 	tx.Commit()
 
-	fmt.Println(dir + file.Name())
+	log.Println(dir + file.Name())
 }
