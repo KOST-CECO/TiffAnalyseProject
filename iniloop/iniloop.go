@@ -112,13 +112,14 @@ func procfile(dir string, file os.FileInfo, TapDb *sql.DB) {
 		return
 	}
 
-	stmt2, err := tx.Prepare("INSERT INTO keyfile (id, creationtime, filesize) VALUES (?, ?, ?)")
+	stmt2, err := tx.Prepare("INSERT INTO keyfile (id, md5, creationtime, filesize) VALUES (?, ?, ?, ?)")
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer stmt2.Close()
 
-	_, err = stmt2.Exec(id, file.ModTime(), file.Size())
+	md5, err := util.ComputeMd5(dir + file.Name())
+	_, err = stmt2.Exec(id, fmt.Sprintf("%x", md5), file.ModTime(), file.Size())
 	if err != nil {
 		log.Fatal(err)
 	}
