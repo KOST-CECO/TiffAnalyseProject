@@ -17,16 +17,15 @@ DROP TABLE IF EXISTS sysindex;
 DROP TABLE IF EXISTS keyfile;
 DROP TABLE IF EXISTS logrotate;
 DROP TABLE IF EXISTS namefile;
-
 DROP TABLE IF EXISTS analysetool;
 
 -- Tabellenstruktur für Tabelle analysetool ------------------------------------
 CREATE TABLE analysetool (
-	toolname VARCHAR(30) NOT NULL,		-- Name des registrierten Analyseprograms in Kurzform
-	prgname VARCHAR(255) NOT NULL,		-- Pfad und Dateiname zum Analyseprograms
-	logfile VARCHAR(255) DEFAULT NULL,	-- Pfad und Dateiname der mit diesem Analyseprograms verbunden Logdatei: Ist kein Logfile definiert wird in BLOB "logout" gespeichert
-	sysfile VARCHAR(255) DEFAULT NULL,	-- Pfad und Dateiname der mit diesem Analyseprograms verbunden Ausgabedatei: Ist kein Sysfile definiert wird in BLOB "sysout" gespeichert
-	logconcat BOOLEAN DEFAULT TRUE NOT NULL,-- Ja(1) bedeutet, dass  das Programm die Logdatei fortsetzen kann, Nein(0) es wir jeweils ein neues Log geschreiben und vom LOOP Programm an "logfile" angehängt
+	toolname VARCHAR(30) NOT NULL,			-- Name des registrierten Analyseprograms in Kurzform
+	prgfile VARCHAR(255) NOT NULL,			-- Pfad und Dateiname zum Analyseprograms
+	prgparam VARCHAR(255) NOT NULL,			-- Parameter des Analyseprograms mit Wildcards %file% und %log%
+	logfile VARCHAR(255) DEFAULT '' NOT NULL,	-- Pfad und Dateiname der mit diesem Analyseprograms verbunden Logdatei: Ist kein Logfile definiert wird in BLOB "logout" gespeichert
+	sysfile VARCHAR(255) DEFAULT '' NOT NULL,	-- Pfad und Dateiname der mit diesem Analyseprograms verbunden Ausgabedatei: Ist kein Sysfile definiert wird in BLOB "sysout" gespeichert
 	PRIMARY KEY (toolname)
 );
 

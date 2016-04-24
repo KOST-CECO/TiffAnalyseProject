@@ -10,9 +10,9 @@
 -- Use the foreign_keys pragma to turn them on
 
 -- Tabellenstruktur für Tabelle analysetool ------------------------------------
-INSERT INTO analysetool (toolname, prgname, logfile, sysfile, logconcat) VALUES
-('exif', 'C:\\Tools\\exiftool10.1\\exiftool(-k).exe', 'Q:\\KOST\\workbench\\tmp_TIFF-Analyse\\exif_log', 'Q:\\KOST\\workbench\\tmp_TIFF-Analyse\\exif_sys', 0),
-('file', 'c:\\Tools\\PCUnixUtils\\GnuWin32\\bin\\file.exe', 'Q:\\KOST\\workbench\\tmp_TIFF-Analyse\\file_log', NULL, 1);
+INSERT INTO analysetool (toolname, prgfile, prgparam, logfile, sysfile) VALUES 
+('exif', 'C:\\Tools\\exiftool10.1\\exiftool(-k).exe', '%file%', '', 'Q:\\KOST\\workbench\\tmp_TIFF-Analyse\\exif_sys'),
+('file', 'c:\\Tools\\PCUnixUtils\\GnuWin32\\bin\\file.exe', '-b -i %file%', 'Q:\\KOST\\workbench\\tmp_TIFF-Analyse\\file_log', '');
 
 -- Tabellenstruktur für Tabelle logrotate --------------------------------------
 INSERT INTO logrotate (loccounter, maxexecute, actexecute) VALUES (1, 0, 0);
