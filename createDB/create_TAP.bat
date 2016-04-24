@@ -14,11 +14,11 @@ IF EXIST %1 (
 	EXIT /B
 )
 
-IF NOT EXIST ./create_TAP.sql (
+IF NOT EXIST %~dp0/create_TAP.sql (
 	ECHO script 'create_TAP.sql' is missing
 	EXIT /B
 )
 
-SQLITE3 -batch -init create_TAP.sql %1 ".exit"
+SQLITE3 -batch -init %~dp0/create_TAP.sql %1 ".exit"
 
 ECHO SQLite DB '%1' created

@@ -7,6 +7,7 @@ import (
 	"os"
 	//"os/exec"
 	"path/filepath"
+	"strconv"
 
 	"github.com/KOST-CECO/TiffAnalyseProject/util"
 	_ "github.com/mattn/go-sqlite3"
@@ -68,6 +69,9 @@ func Regtools(db *sql.DB) int {
 	var tl ToolList
 	Tools = make(map[string]ToolList)
 
+	// start logrotation
+	logcnt := util.Logrotate(db)
+
 	rows, err := db.Query("SELECT toolname, prgfile, prgparam, logfile, sysfile FROM analysetool")
 	if err != nil {
 		log.Fatal(err)
@@ -88,10 +92,10 @@ func Regtools(db *sql.DB) int {
 			log.Fatal(tl.toolname + " prgfile not found: " + tl.prgfile)
 		}
 
-		// open log file
+		// open LOG file
 		tl.log = nil
 		if tl.logfile != "" {
-			tl.logfile, err = filepath.Abs(tl.logfile)
+			tl.logfile, err = filepath.Abs(tl.logfile + "." + strconv.Itoa(logcnt))
 			if err != nil {
 				log.Fatal(err)
 			}
@@ -102,10 +106,10 @@ func Regtools(db *sql.DB) int {
 			defer tl.log.Close()
 		}
 
-		// open sys file
+		// open SYS file
 		tl.sys = nil
 		if tl.sysfile != "" {
-			tl.sysfile, err = filepath.Abs(tl.sysfile)
+			tl.sysfile, err = filepath.Abs(tl.sysfile + "." + strconv.Itoa(logcnt))
 			if err != nil {
 				log.Fatal(err)
 			}

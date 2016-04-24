@@ -15,7 +15,7 @@ INSERT INTO analysetool (toolname, prgfile, prgparam, logfile, sysfile) VALUES
 ('file', 'c:\\Tools\\PCUnixUtils\\GnuWin32\\bin\\file.exe', '-b -i %file%', 'Q:\\KOST\\workbench\\tmp_TIFF-Analyse\\file_log', '');
 
 -- Tabellenstruktur für Tabelle logrotate --------------------------------------
-INSERT INTO logrotate (loccounter, maxexecute, actexecute) VALUES (1, 0, 0);
+INSERT INTO logrotate (logcounter) VALUES (0);
 
 -- Tabellenstruktur für Tabelle namefile ---------------------------------------
 INSERT INTO namefile (id, serverame, filepath, filename) VALUES 
