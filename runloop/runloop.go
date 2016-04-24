@@ -18,7 +18,9 @@ type ToolList struct {
 	prgfile  string
 	prgparam string
 	logfile  string
+	log      *os.File
 	sysfile  string
+	sys      *os.File
 }
 
 var Tools map[string]ToolList
@@ -55,6 +57,7 @@ func main() {
 
 	// check registert tools for validation
 	toolcnt := Regtools(TapDb)
+
 	fmt.Println(toolcnt)
 	fmt.Println(Tools)
 }
@@ -74,12 +77,6 @@ func Regtools(db *sql.DB) int {
 	for rows.Next() {
 		cnt++
 		rows.Scan(&tl.toolname, &tl.prgfile, &tl.prgparam, &tl.logfile, &tl.sysfile)
-		fmt.Println(tl.toolname)
-		fmt.Println(tl.prgfile)
-		fmt.Println(tl.prgparam)
-		fmt.Println(tl.logfile)
-		fmt.Println(tl.sysfile)
-		fmt.Println("-----------")
 
 		// check for valid program file
 		tl.prgfile, err = filepath.Abs(tl.prgfile)
@@ -92,6 +89,32 @@ func Regtools(db *sql.DB) int {
 		}
 
 		// open log file
+		tl.log = nil
+		if tl.logfile != "" {
+			tl.logfile, err = filepath.Abs(tl.logfile)
+			if err != nil {
+				log.Fatal(err)
+			}
+			tl.log, err = os.OpenFile(tl.logfile, os.O_APPEND|os.O_CREATE, 0600)
+			if err != nil {
+				log.Fatal(err)
+			}
+			defer tl.log.Close()
+		}
+
+		// open sys file
+		tl.sys = nil
+		if tl.sysfile != "" {
+			tl.sysfile, err = filepath.Abs(tl.sysfile)
+			if err != nil {
+				log.Fatal(err)
+			}
+			tl.sys, err = os.OpenFile(tl.sysfile, os.O_APPEND|os.O_CREATE, 0600)
+			if err != nil {
+				log.Fatal(err)
+			}
+			defer tl.sys.Close()
+		}
 
 		Tools[tl.toolname] = tl
 	}

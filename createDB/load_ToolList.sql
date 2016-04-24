@@ -18,15 +18,17 @@ INSERT INTO analysetool (toolname, prgfile, prgparam, logfile, sysfile) VALUES (
 	'C:\\Tools\\exiftool10.1\\exiftool(-k).exe', 
 	'%file%', 
 	'', 
-	'Q:\\KOST\\workbench\\tmp_TIFF-Analyse\\exif_sys'
+	'..\\log\\exif_sys'
 );
 
 INSERT INTO analysetool (toolname, prgfile, prgparam, logfile, sysfile) VALUES (
 	'file', 
 	'c:\\Tools\\PCUnixUtils\\GnuWin32\\bin\\file.exe', 
 	'-b -i %file%', 
-	'Q:\\KOST\\workbench\\tmp_TIFF-Analyse\\file_log', 
+	'..\\log\\file_log', 
 	''
 );
 
 SELECT * FROM analysetool;
+
+.exit
