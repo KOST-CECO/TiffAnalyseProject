@@ -15,19 +15,19 @@ INSERT INTO analysetool (toolname, prgfile, prgparam, tmplog, logfile, sysfile) 
 ('file', 'c:\\Tools\\PCUnixUtils\\GnuWin32\\bin\\file.exe', '-b -i %file%', '..\\log\\file.log', 'Q:\\KOST\\workbench\\tmp_TIFF-Analyse\\file_log', '');
 
 -- Tabellenstruktur für Tabelle logrotate --------------------------------------
-INSERT INTO logrotate (logcounter) VALUES (0);
+INSERT INTO logrotate (logcounter) VALUES (1);
 
 -- Tabellenstruktur für Tabelle namefile ---------------------------------------
-INSERT INTO namefile (id, serverame, filepath, filename) VALUES 
-(1, 'BAR-Archiv', 'Q:\\KOST\\workbench\\tmp_TIFF-Analyse\\testSET\\airplane', '4.2.05.tiff'),
-(2, 'BAR-Archiv', 'Q:\\KOST\\workbench\\tmp_TIFF-Analyse\\testSET\\airplane', '7.1.02.tiff'),
-(3, 'BAR-Archiv', 'Q:\\KOST\\workbench\\tmp_TIFF-Analyse\\testSET\\ship', 'boat.512.tiff');
+INSERT INTO namefile (id, md5, serverame, filepath, filename) VALUES 
+(1, '2651dbe60819160e42294dec9dbaed45', 'BAR-Archiv', 'Q:\\KOST\\workbench\\tmp_TIFF-Analyse\\testSET\\airplane', '4.2.05.tiff'),
+(2, '2fca7e211c648e7d53e78727764e3bfb', 'BAR-Archiv', 'Q:\\KOST\\workbench\\tmp_TIFF-Analyse\\testSET\\airplane', '7.1.02.tiff'),
+(3, 'f96911025037311c28974e1815f7bb5e', 'BAR-Archiv', 'Q:\\KOST\\workbench\\tmp_TIFF-Analyse\\testSET\\ship', 'boat.512.tiff');
 
 -- Tabellenstruktur für Tabelle keyfile ----------------------------------------
-INSERT INTO keyfile (id, md5, creationtime, filesize, pdate, loccounter, mimetype) VALUES
-(1, '2651dbe60819160e42294dec9dbaed45', '1997-09-26 00:00:00', 786572, NULL, 1, 'TIFF image data, big-endian'),
-(2, '2fca7e211c648e7d53e78727764e3bfb', '1997-09-26 00:00:00', 262278, NULL, 1, 'TIFF image data, big-endian'),
-(3, 'f96911025037311c28974e1815f7bb5e', '1997-09-26 00:00:00', 262278, NULL, 1, 'TIFF image data, big-endian');
+INSERT INTO keyfile (md5, creationtime, filesize, pdate, logcounter, mimetype) VALUES
+('2651dbe60819160e42294dec9dbaed45', '1997-09-26 00:00:00', 786572, NULL, 1, 'TIFF image data, big-endian'),
+('2fca7e211c648e7d53e78727764e3bfb', '1997-09-26 00:00:00', 262278, NULL, 1, 'TIFF image data, big-endian'),
+('f96911025037311c28974e1815f7bb5e', '1997-09-26 00:00:00', 262278, NULL, 1, 'TIFF image data, big-endian');
 
 -- Tabellenstruktur für Tabelle status -----------------------------------------
 INSERT INTO status (md5, toolname, retval) VALUES 

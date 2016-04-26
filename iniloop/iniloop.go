@@ -6,7 +6,7 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
-	//"os/exec"
+	// "os/exec"
 	"path/filepath"
 
 	"github.com/KOST-CECO/TiffAnalyseProject/util"
@@ -89,7 +89,7 @@ func procloop(dir string, TapDb *sql.DB) {
 	}
 }
 
-// write FileInfo in database namefile and keyfile
+// write FileInfo in database namefile
 func procfile(dir string, file os.FileInfo, TapDb *sql.DB) {
 	id := KeyCounter + 1
 
@@ -111,18 +111,20 @@ func procfile(dir string, file os.FileInfo, TapDb *sql.DB) {
 		log.Println("allready entered: " + dir + file.Name())
 		return
 	}
+	/*
+		stmt2, err := tx.Prepare("INSERT INTO keyfile (id, md5, creationtime, filesize) VALUES (?, ?, ?, ?)")
+		if err != nil {
+			log.Fatal(err)
+		}
+		defer stmt2.Close()
 
-	stmt2, err := tx.Prepare("INSERT INTO keyfile (id, md5, creationtime, filesize) VALUES (?, ?, ?, ?)")
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer stmt2.Close()
+		md5, err := util.ComputeMd5(dir + file.Name())
+		_, err = stmt2.Exec(id, fmt.Sprintf("%x", md5), file.ModTime(), file.Size())
+		if err != nil {
+			log.Fatal(err)
+		}
+	*/
 
-	md5, err := util.ComputeMd5(dir + file.Name())
-	_, err = stmt2.Exec(id, fmt.Sprintf("%x", md5), file.ModTime(), file.Size())
-	if err != nil {
-		log.Fatal(err)
-	}
 	// end transaction
 	KeyCounter = KeyCounter + 1
 	tx.Commit()

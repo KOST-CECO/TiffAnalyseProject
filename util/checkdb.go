@@ -13,7 +13,7 @@ import (
 func Checkdb(db *sql.DB) int32 {
 	var cnt int32 = 0
 
-	rows, err := db.Query("SELECT MAX(id) FROM keyfile")
+	rows, err := db.Query("SELECT MAX(id) FROM namefile")
 	if err != nil {
 		log.Print(err)
 		log.Fatal(os.Args[2] + " is not valide TAP database")

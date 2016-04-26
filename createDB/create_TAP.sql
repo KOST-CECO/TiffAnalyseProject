@@ -40,7 +40,8 @@ CREATE TABLE logrotate (
 
 -- Tabellenstruktur für Tabelle namefile ---------------------------------------
 CREATE TABLE namefile (
-	id INTEGER NOT NULL,			-- Referenz zu "keyfile"
+	id INTEGER NOT NULL,			-- Primary Key
+	md5 VARCHAR(32) DEFAULT NULL,		-- MD5 Hashwert
 	serverame VARCHAR(30) DEFAULT NULL,	-- Name des NAS Servers oder des zugeordneten Laufwerkbuchstabens
 	filepath VARCHAR(255) DEFAULT NULL,	-- Dateipfad
 	filename VARCHAR(255) DEFAULT NULL,	-- Dateiname mit Dateiextension
@@ -50,16 +51,15 @@ CREATE TABLE namefile (
 
 -- Tabellenstruktur für Tabelle keyfile ----------------------------------------
 CREATE TABLE keyfile (
-	id INTEGER NOT NULL,			-- Referenz
 	md5 VARCHAR(32),			-- MD5 Hashwert
 	creationtime DATETIME DEFAULT NULL,	-- Entstehungszeitpunkt der Datei laut Dateisystem
 	filesize LONG DEFAULT NULL,		-- Dateigrösse in Byte
 	pdate DATETIME DEFAULT NULL,		-- Zeitpunkt für den Abschluss der Analyse
-	loccounter INTEGER DEFAULT 1,		-- Zähler für "logfile" bzw. "sysfile" Logrotation beginnend mit 1
+	logcounter INTEGER DEFAULT 1,		-- Zähler für "logfile" bzw. "sysfile" Logrotation beginnend mit 1
 	mimetype VARCHAR(255) DEFAULT NULL,	-- Internet Media Type, auch MIME-Type aufgrund der Magic Number
 	PRIMARY KEY (md5),
-	FOREIGN KEY(id) REFERENCES namefile(id),
-	FOREIGN KEY(loccounter) REFERENCES logrotate(loccounter)
+	FOREIGN KEY(md5) REFERENCES md5(namefile)
+	FOREIGN KEY(logcounter) REFERENCES logrotate(logcounter)
 );
 
 -- Tabellenstruktur für Tabelle status -----------------------------------------
