@@ -18,6 +18,7 @@ type ToolList struct {
 	toolname string
 	prgfile  string
 	prgparam string
+	tmplog   string
 	logfile  string
 	log      *os.File
 	sysfile  string
@@ -72,7 +73,7 @@ func Regtools(db *sql.DB) int {
 	// start logrotation
 	logcnt := util.Logrotate(db)
 
-	rows, err := db.Query("SELECT toolname, prgfile, prgparam, logfile, sysfile FROM analysetool")
+	rows, err := db.Query("SELECT toolname, prgfile, prgparam, tmplog, logfile, sysfile FROM analysetool")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -80,7 +81,7 @@ func Regtools(db *sql.DB) int {
 
 	for rows.Next() {
 		cnt++
-		rows.Scan(&tl.toolname, &tl.prgfile, &tl.prgparam, &tl.logfile, &tl.sysfile)
+		rows.Scan(&tl.toolname, &tl.prgfile, &tl.prgparam, &tl.tmplog, &tl.logfile, &tl.sysfile)
 
 		// check for valid program file
 		tl.prgfile, err = filepath.Abs(tl.prgfile)
@@ -92,10 +93,23 @@ func Regtools(db *sql.DB) int {
 			log.Fatal(tl.toolname + " prgfile not found: " + tl.prgfile)
 		}
 
+		// check temporary LOG file
+		if tl.tmplog != "" {
+			tl.tmplog, err = filepath.Abs(tl.tmplog)
+			if err != nil {
+				log.Fatal(err)
+			}
+			lf, err := os.OpenFile(tl.tmplog, os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0600)
+			if err != nil {
+				log.Fatal(err)
+			}
+			lf.Close()
+		}
+
 		// open LOG file
 		tl.log = nil
 		if tl.logfile != "" {
-			tl.logfile, err = filepath.Abs(tl.logfile + "." + strconv.Itoa(logcnt))
+			tl.logfile, err = filepath.Abs(tl.logfile + "." + strconv.Itoa(logcnt) + ".log")
 			if err != nil {
 				log.Fatal(err)
 			}
@@ -109,7 +123,7 @@ func Regtools(db *sql.DB) int {
 		// open SYS file
 		tl.sys = nil
 		if tl.sysfile != "" {
-			tl.sysfile, err = filepath.Abs(tl.sysfile + "." + strconv.Itoa(logcnt))
+			tl.sysfile, err = filepath.Abs(tl.sysfile + "." + strconv.Itoa(logcnt) + ".log")
 			if err != nil {
 				log.Fatal(err)
 			}

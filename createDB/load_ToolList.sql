@@ -13,19 +13,21 @@
 -- Tabellenstruktur für Tabelle analysetool ------------------------------------
 DELETE FROM analysetool;
 
-INSERT INTO analysetool (toolname, prgfile, prgparam, logfile, sysfile) VALUES (
-	'exif', 
-	'C:\\Tools\\exiftool10.1\\exiftool(-k).exe', 
-	'%file%', 
-	'', 
+INSERT INTO analysetool (toolname,prgfile,prgparam,tmplog,logfile,sysfile) VALUES (
+	'exif',
+	'C:\\Tools\\exiftool10.1\\exiftool(-k).exe',
+	'%file%',
+	'',
+	'',
 	'..\\log\\exif_sys'
 );
 
-INSERT INTO analysetool (toolname, prgfile, prgparam, logfile, sysfile) VALUES (
-	'file', 
-	'c:\\Tools\\PCUnixUtils\\GnuWin32\\bin\\file.exe', 
-	'-b -i %file%', 
-	'..\\log\\file_log', 
+INSERT INTO analysetool (toolname,prgfile,prgparam,tmplog,logfile,sysfile) VALUES (
+	'file',
+	'c:\\Tools\\PCUnixUtils\\GnuWin32\\bin\\file.exe',
+	'-b -i %file%',
+	'..\\log\\file.log',
+	'..\\log\\file_log',
 	''
 );
 

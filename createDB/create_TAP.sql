@@ -21,11 +21,12 @@ DROP TABLE IF EXISTS analysetool;
 
 -- Tabellenstruktur f¸r Tabelle analysetool ------------------------------------
 CREATE TABLE analysetool (
-	toolname VARCHAR(30) NOT NULL,			-- Name des registrierten Analyseprograms in Kurzform
-	prgfile VARCHAR(255) NOT NULL,			-- Pfad und Dateiname zum Analyseprograms
-	prgparam VARCHAR(255) NOT NULL,			-- Parameter des Analyseprograms mit Wildcards %file% und %log%
-	logfile VARCHAR(255) DEFAULT '' NOT NULL,	-- Pfad und Dateiname der mit diesem Analyseprograms verbunden Logdatei: Ist kein Logfile definiert wird in BLOB "logout" gespeichert
-	sysfile VARCHAR(255) DEFAULT '' NOT NULL,	-- Pfad und Dateiname der mit diesem Analyseprograms verbunden Ausgabedatei: Ist kein Sysfile definiert wird in BLOB "sysout" gespeichert
+	toolname VARCHAR(30) NOT NULL,			-- Name des registrierten Analyseprogramms in Kurzform
+	prgfile VARCHAR(255) NOT NULL,			-- Pfad und Dateiname zum Analyseprogramms
+	prgparam VARCHAR(255) NOT NULL,			-- Parameter des Analyseprogramms mit Wildcards %file% und %log%
+	tmplog VARCHAR(255) DEFAULT '' NOT NULL,	-- Tempor‰re Logdatei: ersetzt Wildcards  %log% beim Ausf¸hren des Analyseprogramms, fehlen meint keine Log Datei schreiben
+	logfile VARCHAR(255) DEFAULT '' NOT NULL,	-- Pfad und Dateiname der mit diesem Analyseprogramms verbunden Logdatei: Ist kein Logfile definiert wird in BLOB "logout" gespeichert
+	sysfile VARCHAR(255) DEFAULT '' NOT NULL,	-- Pfad und Dateiname der mit diesem Analyseprogramms verbunden Ausgabedatei: Ist kein Sysfile definiert wird in BLOB "sysout" gespeichert
 	PRIMARY KEY (toolname)
 );
 
@@ -64,7 +65,7 @@ CREATE TABLE keyfile (
 -- Tabellenstruktur f¸r Tabelle status -----------------------------------------
 CREATE TABLE status (
 	md5 VARCHAR(32) NOT NULL,		-- MD5 SchlÅssel der TIFF Datei
-	toolname VARCHAR(30) NOT NULL,		-- Name des registrierten Analyseprograms in Kurzform
+	toolname VARCHAR(30) NOT NULL,		-- Name des registrierten Analyseprogramms in Kurzform
 	retval VARCHAR(255) DEFAULT NULL,	-- RÅckgabe Wert des Tools (Exit Status 0 = erfolgreicher Abschluss)  http://www.hiteksoftware.com/knowledge/articles/049.htm
 	PRIMARY KEY (md5, toolname),
 	FOREIGN KEY(md5) REFERENCES keyfile(md5),
