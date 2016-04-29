@@ -13,14 +13,14 @@ import (
 
 // global type and variable definitions
 type ToolList struct {
-	toolname string
-	prgfile  string
-	prgparam string
-	tmplog   string
-	logfile  string
-	log      *os.File
-	sysfile  string
-	sys      *os.File
+	Toolname string
+	Prgfile  string
+	Prgparam string
+	Tmplog   string
+	Logfile  string
+	Log      *os.File
+	Sysfile  string
+	Sys      *os.File
 }
 
 var Tools map[string]ToolList
@@ -34,7 +34,7 @@ func Regtools(db *sql.DB) int {
 	// start logrotation
 	logcnt := Logrotate(db)
 
-	rows, err := db.Query("SELECT toolname, prgfile, prgparam, tmplog, logfile, sysfile FROM analysetool")
+	rows, err := db.Query("SELECT Toolname, Prgfile, Prgparam, Tmplog, Logfile, Sysfile FROM analysetool")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -42,25 +42,25 @@ func Regtools(db *sql.DB) int {
 
 	for rows.Next() {
 		cnt++
-		rows.Scan(&tl.toolname, &tl.prgfile, &tl.prgparam, &tl.tmplog, &tl.logfile, &tl.sysfile)
+		rows.Scan(&tl.Toolname, &tl.Prgfile, &tl.Prgparam, &tl.Tmplog, &tl.Logfile, &tl.Sysfile)
 
 		// check for valid program file
-		tl.prgfile, err = filepath.Abs(tl.prgfile)
+		tl.Prgfile, err = filepath.Abs(tl.Prgfile)
 		if err != nil {
 			log.Fatal(err)
 		}
-		_, err := os.Stat(tl.prgfile)
+		_, err := os.Stat(tl.Prgfile)
 		if err != nil {
-			log.Fatal(tl.toolname + " prgfile not found: " + tl.prgfile)
+			log.Fatal(tl.Toolname + " Prgfile not found: " + tl.Prgfile)
 		}
 
 		// check temporary LOG file
-		if tl.tmplog != "" {
-			tl.tmplog, err = filepath.Abs(tl.tmplog)
+		if tl.Tmplog != "" {
+			tl.Tmplog, err = filepath.Abs(tl.Tmplog)
 			if err != nil {
 				log.Fatal(err)
 			}
-			lf, err := os.OpenFile(tl.tmplog, os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0600)
+			lf, err := os.OpenFile(tl.Tmplog, os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0600)
 			if err != nil {
 				log.Fatal(err)
 			}
@@ -68,34 +68,34 @@ func Regtools(db *sql.DB) int {
 		}
 
 		// open LOG file
-		tl.log = nil
-		if tl.logfile != "" {
-			tl.logfile, err = filepath.Abs(tl.logfile + "." + strconv.Itoa(logcnt) + ".log")
+		tl.Log = nil
+		if tl.Logfile != "" {
+			tl.Logfile, err = filepath.Abs(tl.Logfile + "." + strconv.Itoa(logcnt) + ".log")
 			if err != nil {
 				log.Fatal(err)
 			}
-			tl.log, err = os.OpenFile(tl.logfile, os.O_APPEND|os.O_CREATE, 0600)
+			tl.Log, err = os.OpenFile(tl.Logfile, os.O_APPEND|os.O_CREATE, 0600)
 			if err != nil {
 				log.Fatal(err)
 			}
-			defer tl.log.Close()
+			// defer tl.Log.Close()
 		}
 
 		// open SYS file
-		tl.sys = nil
-		if tl.sysfile != "" {
-			tl.sysfile, err = filepath.Abs(tl.sysfile + "." + strconv.Itoa(logcnt) + ".log")
+		tl.Sys = nil
+		if tl.Sysfile != "" {
+			tl.Sysfile, err = filepath.Abs(tl.Sysfile + "." + strconv.Itoa(logcnt) + ".log")
 			if err != nil {
 				log.Fatal(err)
 			}
-			tl.sys, err = os.OpenFile(tl.sysfile, os.O_APPEND|os.O_CREATE, 0600)
+			tl.Sys, err = os.OpenFile(tl.Sysfile, os.O_APPEND|os.O_CREATE, 0600)
 			if err != nil {
 				log.Fatal(err)
 			}
-			defer tl.sys.Close()
+			// defer tl.Sys.Close()
 		}
 
-		Tools[tl.toolname] = tl
+		Tools[tl.Toolname] = tl
 	}
 
 	return int(cnt)

@@ -21,4 +21,6 @@ IF NOT EXIST %~dp0/create_TAP.sql (
 
 SQLITE3 -batch -init %~dp0/create_TAP.sql %1 ".exit"
 
+SQLITE3 -batch -init %~dp0/load_ToolList.sql %1 ".exit"
+
 ECHO SQLite DB '%1' created

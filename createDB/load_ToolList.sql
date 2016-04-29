@@ -16,21 +16,28 @@ DELETE FROM analysetool;
 INSERT INTO analysetool (toolname,prgfile,prgparam,tmplog,logfile,sysfile) VALUES (
 	'exif',
 	'C:\\Tools\\exiftool10.1\\exiftool(-k).exe',
-	'%file%',
-	'',
-	'',
+	' -a -u -g1 %file% > %log%',
+	'..\\log\\exif.log',
+	'..\\log\\exif',
 	'..\\log\\exif_sys'
+);
+
+INSERT INTO analysetool (toolname,prgfile,prgparam,tmplog,logfile,sysfile) VALUES (
+	'exiv2',
+	'C:\\Tools\\exiv2-0.25\\exiv2.exe',
+	' -pa %file%',
+	'',
+	'',
+	'..\\log\\exiv2_sys'
 );
 
 INSERT INTO analysetool (toolname,prgfile,prgparam,tmplog,logfile,sysfile) VALUES (
 	'file',
 	'c:\\Tools\\PCUnixUtils\\GnuWin32\\bin\\file.exe',
 	'-b -i %file%',
-	'..\\log\\file.log',
-	'..\\log\\file_log',
+	'',
+	'',
 	''
 );
 
 SELECT * FROM analysetool;
-
-.exit
