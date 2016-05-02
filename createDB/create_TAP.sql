@@ -76,7 +76,8 @@ CREATE TABLE status (
 CREATE TABLE logindex (
 	md5 VARCHAR(32) NOT NULL,		-- MD5 SchlÅssel der TIFF Datei
 	toolname VARCHAR(30) NOT NULL,		-- Kurzname des Tools
-	logoffset INTEGER DEFAULT NULL,		-- Offset in die Ausgabedatei logfile
+	logoffset INTEGER DEFAULT 0,		-- Offset in die Ausgabedatei analysetool.logfile
+	loglen INTEGER DEFAULT 0,		-- L‰nge des Konsolenausgabe
 	logout BLOB,				-- vollst‰ndige LOG Ausgabe des Analysetools
 	PRIMARY KEY (md5, toolname),
 	FOREIGN KEY(md5) REFERENCES keyfile(md5),
@@ -87,7 +88,8 @@ CREATE TABLE logindex (
 CREATE TABLE sysindex (
 	md5 VARCHAR(32) NOT NULL,		-- MD5 SchlÅssel der TIFF Datei
 	toolname VARCHAR(30) NOT NULL,		-- Kurzname des Tools
-	sysoffset INTEGER DEFAULT NULL,		-- Offset in die Ausgabedatei "outfile"
+	sysoffset INTEGER DEFAULT 0,		-- Offset in die Ausgabedatei analysetool.sysfile
+	syslen INTEGER DEFAULT 0,		-- L‰nge des Konsolenausgabe
 	sysout BLOB ,				-- vollst‰ndige SystemOut Ausgabe des Analysetools
 	PRIMARY KEY (md5, toolname),
 	FOREIGN KEY(md5) REFERENCES keyfile(md5),

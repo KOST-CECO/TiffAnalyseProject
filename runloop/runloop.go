@@ -4,6 +4,7 @@ import (
 	//"bytes"
 	"database/sql"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"os"
 	"os/exec"
@@ -121,16 +122,26 @@ func analyseAllFile(db *sql.DB) {
 
 // read a file and start analysing it
 func analyseFile(tx *sql.Tx, md5 string, file string) {
-	fmt.Println("----file: " + file)
 	var tl util.ToolList
 	var exitStatus string = "exit status 0" // default exit status
+	log.Println(file)
 
 	for _, tl = range util.Tools {
 		par := strings.Replace(tl.Prgparam, "%file%", file, -1)
 		par = strings.Replace(par, "%log%", tl.Tmplog, -1)
 		params := strings.Fields(par)
 
+		// clear log file if needed
+		if tl.Tmplog != "" {
+			err := os.Truncate(tl.Tmplog, 0)
+			if err != nil {
+				log.Fatal(err)
+			}
+		}
+
 		// run command
+		fmt.Print(tl.Prgfile)
+		fmt.Println(params)
 		out, err := exec.Command(tl.Prgfile, params...).CombinedOutput()
 		if err != nil {
 			exitStatus = fmt.Sprint(err)
@@ -151,26 +162,52 @@ func analyseFile(tx *sql.Tx, md5 string, file string) {
 		}
 
 		// write SYSINDEX
-		stmt2, err := tx.Prepare("INSERT INTO sysindex(md5, toolname, sysoffset, sysout) VALUES (?, ?, ?, ?)")
+		stmt2, err := tx.Prepare("INSERT INTO sysindex(md5, toolname, sysoffset, syslen, sysout) VALUES (?, ?, ?, ?, ?)")
 		if err != nil {
 			log.Fatal(err)
 		}
 		defer stmt2.Close()
 		if tl.Sysfile == "" {
-			_, err = stmt2.Exec(md5, tl.Toolname, 0, fmt.Sprintf("%s", out))
+			// write blob
+			_, err = stmt2.Exec(md5, tl.Toolname, 0, len(fmt.Sprintf("%s", out)), fmt.Sprintf("%s", out))
 		} else {
+			// append to file
 			fi, err := tl.Sys.Stat()
 			if err != nil {
 				log.Fatal(err)
 			}
-			_, err = stmt2.Exec(md5, tl.Toolname, fi.Size(), tl.Sysfile)
-			if _, err = tl.Sys.WriteString(fmt.Sprintf("%s", out)); err != nil {
+			_, err = stmt2.Exec(md5, tl.Toolname, fi.Size(), len(fmt.Sprintf("%s\n", out)), tl.Sysfile)
+			if _, err = tl.Sys.WriteString(fmt.Sprintf("%s\n", out)); err != nil {
 				log.Fatal(err)
 			}
 		}
-		if err != nil {
-			log.Fatal(err)
-		}
 
+		// write LOGINDEX
+		if tl.Tmplog != "" {
+			// read tmp log file
+			buf, err := ioutil.ReadFile(tl.Tmplog)
+			if err != nil {
+				log.Fatal(err)
+			}
+			stmt3, err := tx.Prepare("INSERT INTO logindex(md5, toolname, logoffset, loglen, logout) VALUES (?, ?, ?, ?, ?)")
+			if err != nil {
+				log.Fatal(err)
+			}
+			defer stmt3.Close()
+			if tl.Logfile == "" {
+				// write blob
+				_, err = stmt2.Exec(md5, tl.Toolname, 0, len(fmt.Sprintf("%s", buf)), fmt.Sprintf("%s", buf))
+			} else {
+				// append to file
+				fi, err := tl.Log.Stat()
+				if err != nil {
+					log.Fatal(err)
+				}
+				_, err = stmt3.Exec(md5, tl.Toolname, fi.Size(), len(fmt.Sprintf("%s\n", buf)), tl.Logfile)
+				if _, err = tl.Log.WriteString(fmt.Sprintf("%s\n", buf)); err != nil {
+					log.Fatal(err)
+				}
+			}
+		}
 	}
 }

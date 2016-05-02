@@ -39,20 +39,21 @@ INSERT INTO status (md5, toolname, retval) VALUES
 ('f96911025037311c28974e1815f7bb5e', 'file', 3);
 
 -- Tabellenstruktur für Tabelle logindex ---------------------------------------
-INSERT INTO logindex (md5, toolname, logoffset, logout) VALUES 
-('2651dbe60819160e42294dec9dbaed45', 'exif', 1, NULL),
-('2651dbe60819160e42294dec9dbaed45', 'file', 1, NULL),
-('2fca7e211c648e7d53e78727764e3bfb', 'exif', 210, NULL),
-('2fca7e211c648e7d53e78727764e3bfb', 'file', 32, NULL),
-('f96911025037311c28974e1815f7bb5e', 'exif', 400, NULL),
-('f96911025037311c28974e1815f7bb5e', 'file', 66, NULL);
+INSERT INTO logindex (md5, toolname, logoffset, loglen, logout) VALUES 
+('2651dbe60819160e42294dec9dbaed45', 'exif', 0, 210, NULL),
+('2651dbe60819160e42294dec9dbaed45', 'file', 0, 32, NULL),
+('2fca7e211c648e7d53e78727764e3bfb', 'exif', 210, 190, NULL),
+('2fca7e211c648e7d53e78727764e3bfb', 'file', 32, 34, NULL),
+('f96911025037311c28974e1815f7bb5e', 'exif', 400, 200, NULL),
+('f96911025037311c28974e1815f7bb5e', 'file', 66, 0, NULL);
 
 -- Tabellenstruktur für Tabelle sysindex ---------------------------------------
-INSERT INTO sysindex (md5, toolname, sysoffset, sysout) VALUES 
-('2651dbe60819160e42294dec9dbaed45', 'exif', 1, NULL),
-('2651dbe60819160e42294dec9dbaed45', 'file', NULL, 'TIFF image data, big-endian'),
-('2fca7e211c648e7d53e78727764e3bfb', 'exif', 22, NULL),
-('2fca7e211c648e7d53e78727764e3bfb', 'file', NULL, 'TIFF image data, big-endian'),
-('f96911025037311c28974e1815f7bb5e', 'exif', 81, NULL),
-('f96911025037311c28974e1815f7bb5e', 'file', NULL, 'TIFF image data, big-endian');
+INSERT INTO sysindex (md5, toolname, sysoffset, syslen, sysout) VALUES 
+('2651dbe60819160e42294dec9dbaed45', 'exif', 0, 22, NULL),
+('2651dbe60819160e42294dec9dbaed45', 'file', 0, 0, 'TIFF image data, big-endian'),
+('2fca7e211c648e7d53e78727764e3bfb', 'exif', 22, 59, NULL),
+('2fca7e211c648e7d53e78727764e3bfb', 'file', 0, 0, 'TIFF image data, big-endian'),
+('f96911025037311c28974e1815f7bb5e', 'exif', 81, 30, NULL),
+('f96911025037311c28974e1815f7bb5e', 'file', 0, 0, 'TIFF image data, big-endian');
 
+.exit

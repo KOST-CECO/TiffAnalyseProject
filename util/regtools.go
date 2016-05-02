@@ -13,13 +13,13 @@ import (
 
 // global type and variable definitions
 type ToolList struct {
-	Toolname string
-	Prgfile  string
-	Prgparam string
-	Tmplog   string
-	Logfile  string
+	Toolname string // Name des registrierten Analyseprogramms in Kurzform
+	Prgfile  string // Pfad und Dateiname zum Analyseprogramms
+	Prgparam string // Parameter des Analyseprogramms mit Wildcards %file% und %log%
+	Tmplog   string // Temporäre Logdatei: ersetzt Wildcards  %log% beim Ausführen des Analyseprogramms, fehlen meint keine Log Datei schreiben
+	Logfile  string // Pfad und Dateiname der mit diesem Analyseprogramms verbunden Logdatei: Ist kein Logfile definiert wird in BLOB "logout" gespeichert
 	Log      *os.File
-	Sysfile  string
+	Sysfile  string // Pfad und Dateiname der mit diesem Analyseprogramms verbunden Ausgabedatei: Ist kein Sysfile definiert wird in BLOB "sysout" gespeichert
 	Sys      *os.File
 }
 

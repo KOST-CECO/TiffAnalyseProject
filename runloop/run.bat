@@ -2,7 +2,13 @@
 SETLOCAL
 
 CLS
-COPY /Y "tap - Kopie.db" tap.db
+DEL  /Q ..\log\*
+
+DEL tap.db
+CALL ..\createDB\create_TAP.bat tap.db
+CALL ..\iniloop\iniloop.exe ..\testSET tap.db
+
+ECHO.
 
 @ECHO ON
 CALL runloop.exe tap.db
