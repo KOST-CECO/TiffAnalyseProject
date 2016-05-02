@@ -24,6 +24,8 @@ type ToolList struct {
 }
 
 var Tools map[string]ToolList
+var Logcnt int = 0        // Zähler für "logfile" bzw. "sysfile" beginnend mit 1
+var Maxexec int32 = 10000 // Maximal Verarbeitungsschritte pro "logfile" bzw. "sysfile"
 
 // read and register list of analyse tools
 func Regtools(db *sql.DB) int {
@@ -32,7 +34,7 @@ func Regtools(db *sql.DB) int {
 	Tools = make(map[string]ToolList)
 
 	// start logrotation
-	logcnt := Logrotate(db)
+	Logcnt, Maxexec = Logrotate(db)
 
 	rows, err := db.Query("SELECT Toolname, Prgfile, Prgparam, Tmplog, Logfile, Sysfile FROM analysetool")
 	if err != nil {
@@ -70,7 +72,7 @@ func Regtools(db *sql.DB) int {
 		// open LOG file
 		tl.Log = nil
 		if tl.Logfile != "" {
-			tl.Logfile, err = filepath.Abs(tl.Logfile + "." + strconv.Itoa(logcnt) + ".log")
+			tl.Logfile, err = filepath.Abs(tl.Logfile + "." + strconv.Itoa(Logcnt) + ".log")
 			if err != nil {
 				log.Fatal(err)
 			}
@@ -84,7 +86,7 @@ func Regtools(db *sql.DB) int {
 		// open SYS file
 		tl.Sys = nil
 		if tl.Sysfile != "" {
-			tl.Sysfile, err = filepath.Abs(tl.Sysfile + "." + strconv.Itoa(logcnt) + ".log")
+			tl.Sysfile, err = filepath.Abs(tl.Sysfile + "." + strconv.Itoa(Logcnt) + ".log")
 			if err != nil {
 				log.Fatal(err)
 			}

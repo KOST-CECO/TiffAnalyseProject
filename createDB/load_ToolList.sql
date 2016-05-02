@@ -11,6 +11,9 @@
 	sysfile 	Pfad und Dateiname der mit diesem Analyseprogramms verbunden Ausgabedatei: Ist kein Sysfile definiert wird in LOB "sysout" gespeichert
 */
 
+-- Testsettings für Logrotation
+INSERT INTO logrotate (logcounter, maxexecute) VALUES (3, 100);
+
 DELETE FROM analysetool;
 
 INSERT INTO analysetool (toolname,prgfile,prgparam,tmplog,logfile,sysfile) VALUES (

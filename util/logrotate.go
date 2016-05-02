@@ -9,8 +9,9 @@ import (
 )
 
 // start logrotation returns logcounter
-func Logrotate(db *sql.DB) int {
-	var cnt int = 0
+func Logrotate(db *sql.DB) (int, int32) {
+	var logcounter int = 0
+	var maxexecute int32 = 10000
 
 	rows, err := db.Query("SELECT MAX(logcounter) FROM logrotate")
 	if err != nil {
@@ -19,17 +20,30 @@ func Logrotate(db *sql.DB) int {
 	defer rows.Close()
 
 	for rows.Next() {
-		rows.Scan(&cnt)
+		rows.Scan(&logcounter)
 	}
 
-	if cnt == 0 {
+	if logcounter == 0 {
 		// initialise logrotation
 		_, err = db.Exec("INSERT INTO logrotate (logcounter) VALUES (1)")
 		if err != nil {
 			log.Fatal(err)
 		}
-		cnt = 1
+		logcounter = 1
+		maxexecute = 10000 //default
+
+	} else {
+		// read last logrotation entry
+		rows, err := db.Query("SELECT MAX(logcounter), maxexecute FROM logrotate")
+		if err != nil {
+			log.Print(err)
+		}
+		defer rows.Close()
+
+		for rows.Next() {
+			rows.Scan(&logcounter, &maxexecute)
+		}
 	}
 
-	return int(cnt)
+	return int(logcounter), int32(maxexecute)
 }

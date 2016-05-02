@@ -54,10 +54,11 @@ func main() {
 	// close all files
 	// defer tl.Sys.Close()
 	// defer tl.log.Close()
+	log.Println(util.Maxexec)
 
 }
 
-// read all files in NAMEFILE, create KEYFILE and start analysing
+// read one file from NAMEFILE, create KEYFILE and start analysing
 func analyseAllFile(db *sql.DB) {
 
 	for {
@@ -117,6 +118,7 @@ func analyseAllFile(db *sql.DB) {
 
 		// end transaction -----------------------------------------------------
 		tx.Commit()
+		util.Maxexec -= 1
 	}
 }
 
