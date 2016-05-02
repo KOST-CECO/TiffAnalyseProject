@@ -1,16 +1,16 @@
-
--- mySQL  Settings
--- USE tap;
-
 -- SQLITE System Settings
 .header on
 .mode column
 
--- Foreign key constraints are disabled by default
--- Use the foreign_keys pragma to turn them on
--- PRAGMA foreign_keys = 1; 
+/* Tabellenstruktur für Tabelle analysetool ------------------------------------
+	toolname 	Name des registrierten Analyseprogramms in Kurzform
+	prgfile 	Pfad und Dateiname zum Analyseprogramms
+	prgparam 	Parameter des Analyseprogramms mit Wildcards %file% und %log%
+	tmplog 		Temporäre Logdatei: ersetzt Wildcards  %log% beim Ausführen des Analyseprogramms, Fehlen meint keine Log Datei schreiben
+	logfile 	Pfad und Dateiname der mit diesem Analyseprogramms verbunden Logdatei: Ist kein Logfile definiert wird in LOB "logout" gespeichert
+	sysfile 	Pfad und Dateiname der mit diesem Analyseprogramms verbunden Ausgabedatei: Ist kein Sysfile definiert wird in LOB "sysout" gespeichert
+*/
 
--- Tabellenstruktur für Tabelle analysetool ------------------------------------
 DELETE FROM analysetool;
 
 INSERT INTO analysetool (toolname,prgfile,prgparam,tmplog,logfile,sysfile) VALUES (

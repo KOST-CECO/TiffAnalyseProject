@@ -24,17 +24,16 @@ CREATE TABLE analysetool (
 	toolname VARCHAR(30) NOT NULL,			-- Name des registrierten Analyseprogramms in Kurzform
 	prgfile VARCHAR(255) NOT NULL,			-- Pfad und Dateiname zum Analyseprogramms
 	prgparam VARCHAR(255) NOT NULL,			-- Parameter des Analyseprogramms mit Wildcards %file% und %log%
-	tmplog VARCHAR(255) DEFAULT '' NOT NULL,	-- Tempor‰re Logdatei: ersetzt Wildcards  %log% beim Ausf¸hren des Analyseprogramms, fehlen meint keine Log Datei schreiben
-	logfile VARCHAR(255) DEFAULT '' NOT NULL,	-- Pfad und Dateiname der mit diesem Analyseprogramms verbunden Logdatei: Ist kein Logfile definiert wird in BLOB "logout" gespeichert
-	sysfile VARCHAR(255) DEFAULT '' NOT NULL,	-- Pfad und Dateiname der mit diesem Analyseprogramms verbunden Ausgabedatei: Ist kein Sysfile definiert wird in BLOB "sysout" gespeichert
+	tmplog VARCHAR(255) DEFAULT '' NOT NULL,	-- Tempor‰re Logdatei: ersetzt Wildcards  %log% beim Ausf¸hren des Analyseprogramms, Fehlen meint keine Log Datei schreiben
+	logfile VARCHAR(255) DEFAULT '' NOT NULL,	-- Pfad und Dateiname der mit diesem Analyseprogramms verbunden Logdatei: Ist kein Logfile definiert wird in LOB "logout" gespeichert
+	sysfile VARCHAR(255) DEFAULT '' NOT NULL,	-- Pfad und Dateiname der mit diesem Analyseprogramms verbunden Ausgabedatei: Ist kein Sysfile definiert wird in LOB "sysout" gespeichert
 	PRIMARY KEY (toolname)
 );
 
 -- Tabellenstruktur f¸r Tabelle logrotate --------------------------------------
 CREATE TABLE logrotate (
-	logcounter INTEGER DEFAULT 0 NOT NULL,	-- Z‰hler f¸r "logfile" bzw. "sysfile" beginnend mit 1
+	logcounter INTEGER DEFAULT 1 NOT NULL,	-- Z‰hler f¸r "logfile" bzw. "sysfile" beginnend mit 1
 	maxexecute INTEGER DEFAULT 10000,	-- Maximal Verarbeitungsschritte pro "logfile" bzw. "sysfile"
-	actexecute INTEGER DEFAULT 0,		-- Aktueller Verarbeitungsschritt
 	PRIMARY KEY (logcounter)
 );
 
@@ -77,7 +76,7 @@ CREATE TABLE logindex (
 	md5 VARCHAR(32) NOT NULL,		-- MD5 SchlÅssel der TIFF Datei
 	toolname VARCHAR(30) NOT NULL,		-- Kurzname des Tools
 	logoffset INTEGER DEFAULT 0,		-- Offset in die Ausgabedatei analysetool.logfile
-	loglen INTEGER DEFAULT 0,		-- L‰nge des Konsolenausgabe
+	loglen INTEGER DEFAULT 0,		-- L‰nge des Logausgabe
 	logout BLOB,				-- vollst‰ndige LOG Ausgabe des Analysetools
 	PRIMARY KEY (md5, toolname),
 	FOREIGN KEY(md5) REFERENCES keyfile(md5),
@@ -90,7 +89,7 @@ CREATE TABLE sysindex (
 	toolname VARCHAR(30) NOT NULL,		-- Kurzname des Tools
 	sysoffset INTEGER DEFAULT 0,		-- Offset in die Ausgabedatei analysetool.sysfile
 	syslen INTEGER DEFAULT 0,		-- L‰nge des Konsolenausgabe
-	sysout BLOB ,				-- vollst‰ndige SystemOut Ausgabe des Analysetools
+	sysout BLOB ,				-- vollst‰ndige SystemOut Ausgabe des Analysetools: stderr & stdout
 	PRIMARY KEY (md5, toolname),
 	FOREIGN KEY(md5) REFERENCES keyfile(md5),
 	FOREIGN KEY(toolname) REFERENCES analysetool(toolname)
