@@ -1,4 +1,0 @@
-find . -path "*.tiff" -exec md5sum {} ; 
-find . -path "*.tiff" -exec ls -l {} ;
-find . -path "*.tiff" -exec c:\Tools\PCUnixUtils\GnuWin32\bin\file.exe {} ;
-
