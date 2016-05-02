@@ -1,0 +1,37 @@
+Anleitung zu GIT 
+
+# GIT: Settings für Kommandozeile
+git config -l
+git config user.name mkaiser56
+git config user.email m.kaiser@access.ch
+git config core.editor notepad
+git config http.proxy proxy.edi.admin.ch:8080
+  
+# git config --global push.default matching
+git config --global push.default simple
+
+SET TERM=xterm
+
+# Neues Arbeitsverzeichnis anlegen
+git clone https://github.com/KOST-CECO/TiffAnalyseProject.git TiffAnalyseProject
+cd TiffAnalyseProject
+
+# Repository überprüfen
+gitk
+git status
+git add
+git commit –a
+git push
+
+# file .gitignore
+Thumbs.db
+*.lnk
+*.exe
+
+# Revisions Tags setzen
+git tag v1.4
+git tag
+git show v1.4
+git push origin --tags
+
+
