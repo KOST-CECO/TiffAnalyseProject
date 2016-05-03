@@ -25,7 +25,7 @@ type ToolList struct {
 
 var Tools map[string]ToolList
 var Logcnt int = 0        // Zähler für "logfile" bzw. "sysfile" beginnend mit 1
-var Maxexec int32 = 10000 // Maximal Verarbeitungsschritte pro "logfile" bzw. "sysfile"
+var Maxexec int32 = 10000 // default Verarbeitungsschritte pro "logfile" bzw. "sysfile"
 
 // read and register list of analyse tools
 func Regtools(db *sql.DB) int {

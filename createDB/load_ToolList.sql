@@ -12,7 +12,7 @@
 */
 
 -- Testsettings für Logrotation
-INSERT INTO logrotate (logcounter, maxexecute) VALUES (3, 100);
+-- INSERT INTO logrotate (logcounter, maxexecute) VALUES (1, 100000);
 
 DELETE FROM analysetool;
 

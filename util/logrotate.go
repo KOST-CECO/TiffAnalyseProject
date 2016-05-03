@@ -8,42 +8,33 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
-// start logrotation returns logcounter
-func Logrotate(db *sql.DB) (int, int32) {
-	var logcounter int = 0
-	var maxexecute int32 = 10000
+// start logrotation returns logcounter and maxexecute for next logfile
+func Logrotate(db *sql.DB) (lc int, mx int32) {
 
-	rows, err := db.Query("SELECT MAX(logcounter) FROM logrotate")
+	rows, err := db.Query("SELECT MAX(logcounter), maxexecute FROM logrotate")
 	if err != nil {
 		log.Print(err)
 	}
 	defer rows.Close()
 
 	for rows.Next() {
-		rows.Scan(&logcounter)
+		rows.Scan(&lc, &mx)
 	}
 
-	if logcounter == 0 {
-		// initialise logrotation
-		_, err = db.Exec("INSERT INTO logrotate (logcounter) VALUES (1)")
-		if err != nil {
-			log.Fatal(err)
-		}
-		logcounter = 1
-		maxexecute = 10000 //default
-
-	} else {
-		// read last logrotation entry
-		rows, err := db.Query("SELECT MAX(logcounter), maxexecute FROM logrotate")
-		if err != nil {
-			log.Print(err)
-		}
-		defer rows.Close()
-
-		for rows.Next() {
-			rows.Scan(&logcounter, &maxexecute)
-		}
+	if lc == 0 {
+		mx = 10000 // default
 	}
 
-	return int(logcounter), int32(maxexecute)
+	// initialise logrotation
+	stmt, err := db.Prepare("INSERT INTO logrotate (logcounter, maxexecute) VALUES (?, ?)")
+	if err != nil {
+		log.Fatal(err)
+	}
+	lc += 1
+	_, err = stmt.Exec(lc, mx)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return
 }

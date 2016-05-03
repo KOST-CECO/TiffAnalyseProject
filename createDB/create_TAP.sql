@@ -32,7 +32,7 @@ CREATE TABLE analysetool (
 
 -- Tabellenstruktur für Tabelle logrotate --------------------------------------
 CREATE TABLE logrotate (
-	logcounter INTEGER DEFAULT 1 NOT NULL,	-- Zähler für "logfile" bzw. "sysfile" beginnend mit 1
+	logcounter INTEGER DEFAULT 0 NOT NULL,	-- Zähler für Logratation "logfile" bzw. "sysfile" 
 	maxexecute INTEGER DEFAULT 10000,	-- Maximal Verarbeitungsschritte pro "logfile" bzw. "sysfile"
 	PRIMARY KEY (logcounter)
 );

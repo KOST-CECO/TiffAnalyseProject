@@ -51,10 +51,8 @@ func main() {
 	// run analysis over all files in NAMEFILE
 	analyseAllFile(TapDb)
 
-	// close all files
-	// defer tl.Sys.Close()
-	// defer tl.log.Close()
-	log.Println(util.Maxexec)
+	// close all open files
+	util.Closelog()
 
 }
 
@@ -77,7 +75,6 @@ func analyseAllFile(db *sql.DB) {
 		file, err := os.Stat(path + name)
 		if err != nil {
 			// end of NAMEFILE
-			// log.Print(err)
 			return
 		}
 
@@ -91,12 +88,12 @@ func analyseAllFile(db *sql.DB) {
 		md5, err := util.ComputeMd5(path + name)
 		md5string := fmt.Sprintf("%x", md5)
 
-		stmt1, err := tx.Prepare("INSERT INTO keyfile (md5, creationtime, filesize) VALUES (?, ?, ?)")
+		stmt1, err := tx.Prepare("INSERT INTO keyfile (md5, creationtime, filesize, pdate, logcounter) VALUES (?, ?, ?, DATETIME(), ?)")
 		if err != nil {
 			log.Fatal(err)
 		}
 		defer stmt1.Close()
-		_, err = stmt1.Exec(md5string, file.ModTime(), file.Size())
+		_, err = stmt1.Exec(md5string, file.ModTime(), file.Size(), util.Logcnt)
 		if err != nil {
 			// same file occurse twice in collection
 			// log.Print(err)
@@ -119,10 +116,16 @@ func analyseAllFile(db *sql.DB) {
 		// end transaction -----------------------------------------------------
 		tx.Commit()
 		util.Maxexec -= 1
+
+		// logrotation
+		if util.Maxexec == 0 {
+			util.Closelog()
+			util.Regtools(db)
+		}
 	}
 }
 
-// read a file and start analysing it
+// analyse one file
 func analyseFile(tx *sql.Tx, md5 string, file string) {
 	var tl util.ToolList
 	var exitStatus string = "exit status 0" // default exit status
@@ -142,8 +145,8 @@ func analyseFile(tx *sql.Tx, md5 string, file string) {
 		}
 
 		// run command
-		fmt.Print(tl.Prgfile)
-		fmt.Println(params)
+		// fmt.Print(tl.Prgfile)
+		// fmt.Println(params)
 		out, err := exec.Command(tl.Prgfile, params...).CombinedOutput()
 		if err != nil {
 			exitStatus = fmt.Sprint(err)
