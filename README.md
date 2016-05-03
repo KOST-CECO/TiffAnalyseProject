@@ -19,3 +19,6 @@ Folgende Schritte müssen ausgeführt werden:
 
 5. Mit runloop.exe die Verarbeitung starten  
    usage: runloop.exe [options] database
+
+runloop.exe kann mit Ctrl-C unterbrochen oder beendet werden.  
+Zwischendurch, wenn auch nicht gleichzeitig, ist es auch möglich mit iniloop.exe weiter Dateien in die Datenbank einzufügen.
