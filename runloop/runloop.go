@@ -132,9 +132,17 @@ func analyseFile(tx *sql.Tx, md5 string, file string) {
 	log.Println(file)
 
 	for _, tl = range util.Tools {
-		par := strings.Replace(tl.Prgparam, "%file%", file, -1)
-		par = strings.Replace(par, "%log%", tl.Tmplog, -1)
+		par := tl.Prgparam
 		params := strings.Fields(par)
+
+		for i, p := range params {
+			if p == "%file%" {
+				params[i] = file
+			}
+			if p == "%log%" {
+				params[i] = tl.Tmplog
+			}
+		}
 
 		// clear log file if needed
 		if tl.Tmplog != "" {
@@ -146,7 +154,6 @@ func analyseFile(tx *sql.Tx, md5 string, file string) {
 
 		// run command
 		// fmt.Print(tl.Prgfile)
-		// fmt.Println(params)
 		out, err := exec.Command(tl.Prgfile, params...).CombinedOutput()
 		if err != nil {
 			exitStatus = fmt.Sprint(err)

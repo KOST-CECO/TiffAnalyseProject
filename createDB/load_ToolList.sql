@@ -27,10 +27,10 @@ INSERT INTO analysetool (toolname,prgfile,prgparam,tmplog,logfile,sysfile) VALUE
 
 INSERT INTO analysetool (toolname,prgfile,prgparam,tmplog,logfile,sysfile) VALUES (
 	'exif',
-	'C:\\Tools\\exiftool10.1\\exiftool(-k).exe',
-	' -a -u -g1 %file% > %log%',
-	'..\\log\\ef.log',
-	'..\\log\\exif_log',
+	'C:\\Tools\\Image-ExifTool-10.15\\exiftool.bat',
+	' -a -u -g1 %file%',
+	'',
+	'',
 	''
 );
 
@@ -47,7 +47,7 @@ INSERT INTO analysetool (toolname,prgfile,prgparam,tmplog,logfile,sysfile) VALUE
 	'exiv2',
 	'C:\\Tools\\exiv2-0.25\\exiv2.exe',
 	' -pa %file%',
-	'..\\log\\ev2.log',
+	'',
 	'',
 	'..\\log\\exiv2_sys'
 );
@@ -57,8 +57,8 @@ INSERT INTO analysetool (toolname,prgfile,prgparam,tmplog,logfile,sysfile) VALUE
 	'C:\\Tools\\PCUnixUtils\\GnuWin32\\bin\\file.exe',
 	'-b -i %file%',
 	'',
-	'..\\log\\file_log',
-	''
+	'',
+	'..\\log\\file_sys'
 );
 
 SELECT * FROM analysetool;

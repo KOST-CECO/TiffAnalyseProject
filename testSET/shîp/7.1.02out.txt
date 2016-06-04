@@ -1,0 +1,30 @@
+---- ExifTool ----
+ExifTool Version Number         : 10.15
+Warning                         : Install Win32::API for proper handling of Windows file times
+---- System ----
+File Name                       : 7.1.02.tiff
+Directory                       : C:/Tools/Gowork/src/github.com/KOST-CECO/TiffAnalyseProject/testSET/ship
+File Size                       : 256 kB
+File Modification Date/Time     : 2016:04:13 10:28:38+02:00
+File Access Date/Time           : 2016:04:26 14:33:45+02:00
+File Creation Date/Time         : 2016:04:26 14:33:45+02:00
+File Permissions                : rw-rw-rw-
+---- File ----
+File Type                       : TIFF
+File Type Extension             : tif
+MIME Type                       : image/tiff
+Exif Byte Order                 : Big-endian (Motorola, MM)
+---- IFD0 ----
+Subfile Type                    : Full-resolution Image
+Image Width                     : 512
+Image Height                    : 512
+Bits Per Sample                 : 8
+Compression                     : Uncompressed
+Photometric Interpretation      : BlackIsZero
+Strip Offsets                   : 8
+Samples Per Pixel               : 1
+Strip Byte Counts               : 262144
+Planar Configuration            : Chunky
+---- Composite ----
+Image Size                      : 512x512
+Megapixels                      : 0.262
