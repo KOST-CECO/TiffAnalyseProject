@@ -19,10 +19,10 @@ DELETE FROM analysetool;
 INSERT INTO analysetool (toolname,prgfile,prgparam,tmplog,logfile,sysfile) VALUES (
 	'Jhove',
 	'c:\Tools\jhove\jhove.bat',
-	'%file% -o %log%',
+	' -c C:\Tools\jhove\conf\jhove.conf %file% -o %log%',
 	'..\\log\\jhove.log',
 	'..\\log\\jhove_log',
-	''
+	'..\\log\\jhove_sys'
 );
 
 INSERT INTO analysetool (toolname,prgfile,prgparam,tmplog,logfile,sysfile) VALUES (
@@ -31,7 +31,7 @@ INSERT INTO analysetool (toolname,prgfile,prgparam,tmplog,logfile,sysfile) VALUE
 	' -a -u -g1 %file%',
 	'',
 	'',
-	''
+	'..\\log\\exif_sys'
 );
 
 INSERT INTO analysetool (toolname,prgfile,prgparam,tmplog,logfile,sysfile) VALUES (

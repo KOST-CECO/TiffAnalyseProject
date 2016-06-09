@@ -9,7 +9,6 @@ import (
 	"os"
 	"os/exec"
 	"strings"
-	//"os/exec"
 
 	"github.com/KOST-CECO/TiffAnalyseProject/util"
 	_ "github.com/mattn/go-sqlite3"
@@ -174,6 +173,8 @@ func analyseFile(tx *sql.Tx, md5 string, file string) {
 		}
 
 		// write SYSINDEX
+		util.Anonymized(out, file)
+
 		stmt2, err := tx.Prepare("INSERT INTO sysindex(md5, toolname, sysoffset, syslen, sysout) VALUES (?, ?, ?, ?, ?)")
 		if err != nil {
 			log.Fatal(err)
