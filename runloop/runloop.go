@@ -153,7 +153,7 @@ func analyseFile(tx *sql.Tx, md5 string, file string) {
 
 		// run command
 		// fmt.Print(tl.Prgfile)
-		out, err := exec.Command(tl.Prgfile, params...).CombinedOutput()
+		sysout, err := exec.Command(tl.Prgfile, params...).CombinedOutput()
 		if err != nil {
 			exitStatus = fmt.Sprint(err)
 			//log.Fatal(err)
@@ -173,8 +173,7 @@ func analyseFile(tx *sql.Tx, md5 string, file string) {
 		}
 
 		// write SYSINDEX
-		util.Anonymized(out, file)
-
+		sysstr := util.Anonymize(sysout, file)
 		stmt2, err := tx.Prepare("INSERT INTO sysindex(md5, toolname, sysoffset, syslen, sysout) VALUES (?, ?, ?, ?, ?)")
 		if err != nil {
 			log.Fatal(err)
@@ -182,15 +181,15 @@ func analyseFile(tx *sql.Tx, md5 string, file string) {
 		defer stmt2.Close()
 		if tl.Sysfile == "" {
 			// write blob
-			_, err = stmt2.Exec(md5, tl.Toolname, 0, len(fmt.Sprintf("%s", out)), fmt.Sprintf("%s", out))
+			_, err = stmt2.Exec(md5, tl.Toolname, 0, len(sysstr), sysstr)
 		} else {
 			// append to file
 			fi, err := tl.Sys.Stat()
 			if err != nil {
 				log.Fatal(err)
 			}
-			_, err = stmt2.Exec(md5, tl.Toolname, fi.Size(), len(fmt.Sprintf("%s\n", out)), tl.Sysfile)
-			if _, err = tl.Sys.WriteString(fmt.Sprintf("%s\n", out)); err != nil {
+			_, err = stmt2.Exec(md5, tl.Toolname, fi.Size(), len(sysstr), tl.Sysfile)
+			if _, err = tl.Sys.WriteString(fmt.Sprintf("%s\n", sysstr)); err != nil {
 				log.Fatal(err)
 			}
 		}
@@ -198,7 +197,7 @@ func analyseFile(tx *sql.Tx, md5 string, file string) {
 		// write LOGINDEX
 		if tl.Tmplog != "" {
 			// read tmp log file
-			buf, err := ioutil.ReadFile(tl.Tmplog)
+			logbuf, err := ioutil.ReadFile(tl.Tmplog)
 			if err != nil {
 				log.Fatal(err)
 			}
@@ -206,18 +205,20 @@ func analyseFile(tx *sql.Tx, md5 string, file string) {
 			if err != nil {
 				log.Fatal(err)
 			}
+
 			defer stmt3.Close()
+			logstr := util.Anonymize(logbuf, file)
 			if tl.Logfile == "" {
 				// write blob
-				_, err = stmt2.Exec(md5, tl.Toolname, 0, len(fmt.Sprintf("%s", buf)), fmt.Sprintf("%s", buf))
+				_, err = stmt2.Exec(md5, tl.Toolname, 0, len(logstr), logstr)
 			} else {
 				// append to file
 				fi, err := tl.Log.Stat()
 				if err != nil {
 					log.Fatal(err)
 				}
-				_, err = stmt3.Exec(md5, tl.Toolname, fi.Size(), len(fmt.Sprintf("%s\n", buf)), tl.Logfile)
-				if _, err = tl.Log.WriteString(fmt.Sprintf("%s\n", buf)); err != nil {
+				_, err = stmt3.Exec(md5, tl.Toolname, fi.Size(), len(logstr), tl.Logfile)
+				if _, err = tl.Log.WriteString(logstr); err != nil {
 					log.Fatal(err)
 				}
 			}
