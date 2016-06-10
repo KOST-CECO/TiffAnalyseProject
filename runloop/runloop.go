@@ -87,12 +87,15 @@ func analyseAllFile(db *sql.DB) {
 		md5, err := util.ComputeMd5(path + name)
 		md5string := fmt.Sprintf("%x", md5)
 
-		stmt1, err := tx.Prepare("INSERT INTO keyfile (md5, creationtime, filesize, pdate, logcounter) VALUES (?, ?, ?, DATETIME(), ?)")
+		// detect mime tyoe for file entry
+		mimestring, err := util.Detectcontenttype(path + name)
+
+		stmt1, err := tx.Prepare("INSERT INTO keyfile (md5, creationtime, filesize, pdate, logcounter, mimetype) VALUES (?, ?, ?, DATETIME(), ?, ?)")
 		if err != nil {
 			log.Fatal(err)
 		}
 		defer stmt1.Close()
-		_, err = stmt1.Exec(md5string, file.ModTime(), file.Size(), util.Logcnt)
+		_, err = stmt1.Exec(md5string, file.ModTime(), file.Size(), util.Logcnt, mimestring)
 		if err != nil {
 			// same file occurse twice in collection
 			// log.Print(err)

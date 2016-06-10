@@ -6,6 +6,7 @@ import (
 	"os"
 )
 
+// detect mime type
 func Detectcontenttype(path string) (string, error) {
 
 	file, err := os.Open(path)
