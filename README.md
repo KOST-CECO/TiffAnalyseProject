@@ -11,14 +11,14 @@ Folgende Schritte müssen ausgeführt werden:
 
 2. In Script load_ToolList.sql die entsprechenden Analyseprogramme und Log Dateien eintragen (siehe Beispiele load_ToolList.sql)  
 
-3. Mit Script create_TAP.bat eine neue Datenbank anlegen   
+3. Mit Script create_TAP.bat / create_TAP.sh eine neue Datenbank anlegen   
    usage: create_TAP.bat path/dbname.db
  
-4. Mit inloop.exe alle Dateien einlesen und in die Datenbank schreiben.  
+4. Mit inloop.exe /iniloop alle Dateien einlesen und in die Datenbank schreiben.  
    inloop.exe kann mit mehreren Startordnern mehrfach aufgerufen werden  
    usage: iniloop.exe folder database  
 
-5. Mit runloop.exe die Verarbeitung starten  
+5. Mit runloop.exe / runloop die Verarbeitung starten  
    usage: runloop.exe [options] database  
 
 runloop.exe kann mit Ctrl-C unterbrochen oder beendet werden.  
