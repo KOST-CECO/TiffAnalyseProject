@@ -76,7 +76,13 @@ func Regtools(db *sql.DB) int {
 			if err != nil {
 				log.Fatal(err)
 			}
-			tl.Log, err = os.OpenFile(tl.Logfile, os.O_APPEND|os.O_CREATE, 0600)
+			// doesn't work with Linux Mint 17.3
+			// tl.Log, err = os.OpenFile(tl.Logfile, os.O_APPEND|os.O_CREATE, 0600)
+			tl.Log, err = os.OpenFile(tl.Logfile, os.O_APPEND|os.O_WRONLY, 0666)
+			if err != nil {
+				tl.Log, err = os.OpenFile(tl.Logfile, os.O_CREATE|os.O_WRONLY, 0666)
+			}
+
 			if err != nil {
 				log.Fatal(err)
 			}
@@ -87,13 +93,20 @@ func Regtools(db *sql.DB) int {
 		tl.Sys = nil
 		if tl.Sysfile != "" {
 			tl.Sysfile, err = filepath.Abs(tl.Sysfile + "." + strconv.Itoa(Logcnt) + ".log")
+			log.Println(tl.Sysfile)
 			if err != nil {
 				log.Fatal(err)
 			}
-			tl.Sys, err = os.OpenFile(tl.Sysfile, os.O_APPEND|os.O_CREATE, 0600)
+			// doesn't work with Linux Mint 17.3
+			// tl.Sys, err = os.OpenFile(tl.Sysfile, os.O_APPEND|os.O_CREATE, 0600)
+			tl.Sys, err = os.OpenFile(tl.Sysfile, os.O_APPEND|os.O_WRONLY, 0666)
+			if err != nil {
+				tl.Sys, err = os.OpenFile(tl.Sysfile, os.O_CREATE|os.O_WRONLY, 0666)
+			}
 			if err != nil {
 				log.Fatal(err)
 			}
+			log.Println(tl.Sysfile)
 			// defer tl.Sys.Close()
 		}
 
