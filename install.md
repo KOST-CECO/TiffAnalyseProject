@@ -44,9 +44,6 @@ SQLITE installieren
 sudo apt-get install sqlite3
 sudo apt-get install libsqlite3-dev
 
-then, re-bundle:
-bundle install
-
 GCC Installieren
 sudo apt-get install gcc (gcc is already the newest version)
 sudo apt-get install gcc-4.8 (unable to locate package)
@@ -56,5 +53,8 @@ https://github.com/mattn/go-sqlite3/blob/master/README.md
 cd $GOPATH/src
 go get github.com/mattn/go-sqlite3
 go install github.com/mattn/go-sqlite3
+
+JHOVE Installieren
+sudo apt-get install jhove
 
 
