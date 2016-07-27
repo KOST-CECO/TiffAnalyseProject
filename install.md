@@ -1,5 +1,6 @@
-﻿# Anleitung zu GIT 
-# ----------------
+﻿# -------------------------------------------------------------
+# Anleitung zu GIT 
+# -------------------------------------------------------------
 # GIT: Settings für Kommandozeile
 git config -l
 git config user.name mkaiser56
@@ -40,7 +41,7 @@ git push origin --tags
 
 # -------------------------------------------------------------
 # LINUX Tools installieren
-# ------------------------
+# -------------------------------------------------------------
 # sqlite3 
 sudo apt-get install sqlite3
 sudo apt-get install libsqlite3-dev
@@ -59,17 +60,16 @@ go install github.com/mattn/go-sqlite3
 sudo apt-get install jhove
 sudo apt-get install exif
 sudo apt-get install libimage-exiftool-perl
+sudo apt-get install exiv2
 
 # checkit_tiff kompilieren
 sudo apt-get install cmake
 sudo apt-get install g++
 sudo apt-get install libtiff4-dev
-sudo apt-get update
 sudo apt-get install libpcre3 libpcre3-dev
+sudo apt-get update
 mkdir build
 cd build
 cmake ../src/
 make
-
-
 

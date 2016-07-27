@@ -21,6 +21,10 @@ Folgende Schritte müssen ausgeführt werden:
 5. Mit runloop.exe / runloop die Verarbeitung starten  
    usage: runloop.exe [options] database  
 
+(6)Mit Script clean_TAP.bat / clean_TAP.sh kann die Datenbank zurückgesetzt werden
+   damit eine neue runloop Verarbeitung gestartet werden kann
+   usage: clean_TAP.bat path/dbname.db
+
 runloop.exe kann mit Ctrl-C unterbrochen oder beendet werden.  
 
 Es empfiehlt sich, zu Beginn runloop.exe nach kurzer Zeit abzubrechen und zu kontrollieren, ob alle aufgerufenen Analysetools in gewünschter Art und Weise arbeiten und die entsprechenden LOG Dateien geschrieben werden. Die entstandenen Testergebnisse können mit clean_TAP.bat wieder aus der Datenbank entfernt werden, ohne dass die bereits gelesenen Dateiinformationen verloren gehen. Achtung, LOG Dateien müssen manuell gelöscht werden.  
