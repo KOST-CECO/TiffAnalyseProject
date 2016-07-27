@@ -22,7 +22,61 @@ INSERT INTO analysetool (toolname,prgfile,prgparam,tmplog,logfile,sysfile) VALUE
 	'-b -i %file%',
 	'',
 	'',
-	'log/file_sys'
+	''
+);
+
+INSERT INTO analysetool (toolname,prgfile,prgparam,tmplog,logfile,sysfile) VALUES (
+	'jhove',
+	'/usr/bin/jhove',
+	'%file% -o %log%',
+	'log/jhove_tmp',
+	'log/jhove_out',
+	''
+);
+
+INSERT INTO analysetool (toolname,prgfile,prgparam,tmplog,logfile,sysfile) VALUES (
+	'tiffhist',
+	'./tiffhist',
+	'%file% %log%',
+	'log/tiffhist_tmp',
+	'log/tiffhist_out',
+	''
+);
+
+INSERT INTO analysetool (toolname,prgfile,prgparam,tmplog,logfile,sysfile) VALUES (
+	'checkit_tiff',
+	'./checkit_tiff',
+	'-c %file% cit_tiff_baseline_minimal.cfg',
+	'',
+	'',
+	'log/checkit_tiff_sys'
+);
+
+INSERT INTO analysetool (toolname,prgfile,prgparam,tmplog,logfile,sysfile) VALUES (
+	'exif',
+	'/usr/bin/exiftool',
+	'-a -u -g1 %file%',
+	'',
+	'',
+	''
+);
+
+INSERT INTO analysetool (toolname,prgfile,prgparam,tmplog,logfile,sysfile) VALUES (
+	'exiv2',
+	'/usr/bin/exiv2',
+	'-pa %file%',
+	'',
+	'',
+	''
+);
+
+INSERT INTO analysetool (toolname,prgfile,prgparam,tmplog,logfile,sysfile) VALUES (
+	'ImageMagick',
+	'/usr/bin/identify.im6',
+	'-verbose %file%',
+	'',
+	'',
+	'log/imagemagick_sys'
 );
 
 SELECT * FROM analysetool;

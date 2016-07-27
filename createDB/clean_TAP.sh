@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # get script directory
 cd `dirname $0`
@@ -31,7 +31,8 @@ echo "Attention: all result output is removed form database - stop with CTRL-C"
 read -n1 -r -p "Press any key to continue..." key
 
 sqlite3 -batch -init ${SCRIPTDIR}/clean_TAP.sql $1 ".exit"
-sqlite3 $1 -batch "update namefile set md5=NULL;" ".exit" 
+sqlite3 $1 -batch "update namefile set md5=NULL;"
+sqlite3 -batch -init ${SCRIPTDIR}/load_ToolList.sql $1 ".exit"
 
 echo
 echo "SQLite DB $1 cleaned"
