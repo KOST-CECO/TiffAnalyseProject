@@ -8,7 +8,7 @@ fi
 
 # run dpf-manager ------------------------------------------------------------------
 
-LOGDIR=/home/mkaiser/DPF\ Manager/reports/log
+LOGDIR=~/DPF\ Manager/reports/log
 INPUT=`readlink -f $1`
 
 if ! [ -f "${INPUT}" ]
@@ -26,7 +26,7 @@ fi
 rm -rf "${LOGDIR}"
 mkdir -p "${LOGDIR}" 
 
-/usr/bin/dpf-manager -s -configuration ~/DPF\ Manager/baseline_simple.dpf -o "${LOGDIR}" "${INPUT}" 
+/usr/bin/dpf-manager -s -configuration ~/DPF\ Manager/baseline.dpf -o "${LOGDIR}" "${INPUT}" 
 
 rm -f "${LOGDIR}"/summary.xml
 
