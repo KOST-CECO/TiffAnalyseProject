@@ -11,19 +11,19 @@ if [ $# -ne 1 ]
 then
 	echo "Database name is missing"
 	echo "usage: $0 path/dbname.db"
-	exit -1
+	exit 1
 fi
 
 if ! [ -f $1 ]
 then
 	echo "Database $1 is missing"
-	exit -1
+	exit 1
 fi
 
 if ! [ -f ${SCRIPTDIR}/clean_TAP.sql ]
 then
 	echo "script ${SCRIPTDIR}/clean_TAP.sql is missing"
-	exit -1
+	exit 1
 fi
 
 echo
@@ -36,3 +36,5 @@ sqlite3 -batch -init ${SCRIPTDIR}/load_ToolList.sql $1 ".exit"
 
 echo
 echo "SQLite DB $1 cleaned"
+
+exit 0

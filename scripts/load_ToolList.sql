@@ -79,4 +79,14 @@ INSERT INTO analysetool (toolname,prgfile,prgparam,tmplog,logfile,sysfile) VALUE
 	'log/imagemagick_sys'
 );
 
+INSERT INTO analysetool (toolname,prgfile,prgparam,tmplog,logfile,sysfile) VALUES (
+	'dpf-manager',
+	'dpf-manager-wrapper.sh',
+	'%file% %log%',
+	'log/dpf-manager_tmp',
+	'log/dpf-manager_out',
+	''
+);
+
+
 SELECT * FROM analysetool;
