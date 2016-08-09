@@ -9,6 +9,11 @@
 -- Foreign key constraints are disabled by default
 -- Use the foreign_keys pragma to turn them on
 PRAGMA foreign_keys = 1; 
+PRAGMA synchronous = OFF;
+-- PRAGMA synchronous = NORMAL;
+-- PRAGMA locking_mode = NORMAL;
+-- PRAGMA busy_timeout = 1000;
+
 
 -- Tabellen in der richtigen Reihenfolge löschen
 DROP TABLE IF EXISTS status;
