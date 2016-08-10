@@ -108,7 +108,6 @@ func procfile(dir string, file os.FileInfo, TapDb *sql.DB) {
 			return
 		}
 	*/
-
 	// end transaction
 	KeyCounter = KeyCounter + 1
 
