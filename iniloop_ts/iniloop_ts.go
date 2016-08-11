@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
+
 	// "os/exec"
 	"path/filepath"
 
@@ -57,6 +58,20 @@ func main() {
 	}
 	defer TapDb.Close()
 
+	// set PRAGMA for fast insert
+	_, err = TapDb.Exec("PRAGMA foreign_keys = 0;")
+	if err != nil {
+		log.Fatal(err)
+	}
+	_, err = TapDb.Exec("PRAGMA synchronous = 0;")
+	if err != nil {
+		log.Fatal(err)
+	}
+	_, err = TapDb.Exec("PRAGMA journal_mode = 0;")
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	// check for valid sqlite3 database and read max id
 	KeyCounter = util.Checkdb(TapDb)
 
@@ -84,31 +99,22 @@ func procloop(dir string, TapDb *sql.DB) {
 				// fmt.Println(dir + f.Name())
 				procfile(dir, f, TapDb)
 			}
-
 		}
-
 	}
 }
 
 // write FileInfo in database namefile
 func procfile(dir string, file os.FileInfo, TapDb *sql.DB) {
-	//id := KeyCounter + 1
+	id := KeyCounter + 1
 
-	// start transaction
-	/*
-		stmt1, err := TapDb.Prepare("INSERT INTO namefile (id, serverame, filepath, filename) VALUES (?, ?, ?, ?)")
-		if err != nil {
-			log.Fatal(err)
-		}
-		defer stmt1.Close()
+	ins := "INSERT INTO namefile (id, serverame, filepath, filename) VALUES " + fmt.Sprintf("('%v', '%v', '%v', '%v')", id, filepath.VolumeName(dir), dir, file.Name())
 
-		_, err = stmt1.Exec(id, filepath.VolumeName(dir), dir, file.Name())
-		if err != nil {
-			log.Println("allready entered: " + dir + file.Name())
-			return
-		}
-	*/
-	// end transaction
+	_, err := TapDb.Exec(ins)
+	if err != nil {
+		log.Println("allready entered: " + dir + file.Name())
+		return
+	}
+
 	KeyCounter = KeyCounter + 1
 
 	log.Println(dir + file.Name())
