@@ -69,7 +69,7 @@ INSERT INTO analysetool (toolname,prgfile,prgparam,tmplog,logfile,sysfile) VALUE
 	'',
 	''
 );
-
+/*
 INSERT INTO analysetool (toolname,prgfile,prgparam,tmplog,logfile,sysfile) VALUES (
 	'ImageMagick',
 	'/usr/bin/identify.im6',
@@ -78,10 +78,10 @@ INSERT INTO analysetool (toolname,prgfile,prgparam,tmplog,logfile,sysfile) VALUE
 	'',
 	'log/imagemagick_sys'
 );
-
+*/
 INSERT INTO analysetool (toolname,prgfile,prgparam,tmplog,logfile,sysfile) VALUES (
 	'dpf-manager',
-	'dpf-manager-wrapper.sh',
+	'./dpf-manager-wrapper.sh',
 	'%file% %log%',
 	'log/dpf-manager_tmp',
 	'log/dpf-manager_out',

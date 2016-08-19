@@ -16,6 +16,7 @@ import (
 // global variable definitions
 var KeyCounter int32 = 0 // holds the latest id used in namefile and keyfile
 
+// !!! inilp: version without tranactions !!!
 // read prog arguments, test database and start directory walk
 func main() {
 	/* copy empty tap db for test purpose only
@@ -56,6 +57,26 @@ func main() {
 	}
 	defer TapDb.Close()
 
+	// set PRAGMA for fast insert
+	_, err = TapDb.Exec("PRAGMA foreign_keys = 0;")
+	if err != nil {
+		log.Fatal(err)
+	}
+	_, err = TapDb.Exec("PRAGMA synchronous = 0;")
+	if err != nil {
+		log.Fatal(err)
+	}
+	_, err = TapDb.Exec("PRAGMA journal_mode = 0;")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	stmt, err := TapDb.Prepare("INSERT INTO namefile (id, serverame, filepath, filename) VALUES (?, ?, ?, ?)")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer stmt.Close()
+
 	// check for valid sqlite3 database and read max id
 	KeyCounter = util.Checkdb(TapDb)
 
@@ -64,12 +85,12 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	procloop(path+string(os.PathSeparator), TapDb)
+	procloop(path+string(os.PathSeparator), stmt)
 	os.Exit(0)
 }
 
 // read all files in actual folder and recurse through subsequent folders
-func procloop(dir string, TapDb *sql.DB) {
+func procloop(dir string, stmt *sql.Stmt) {
 	files, _ := ioutil.ReadDir(dir)
 
 	for _, f := range files {
@@ -77,57 +98,30 @@ func procloop(dir string, TapDb *sql.DB) {
 		if (f.Name()[0:1]) != "." {
 			if f.IsDir() {
 				// subsequent folder detected
-				procloop(dir+f.Name()+string(os.PathSeparator), TapDb)
+				procloop(dir+f.Name()+string(os.PathSeparator), stmt)
 			} else {
 				// process file
 				// fmt.Println(dir + f.Name())
-				procfile(dir, f, TapDb)
+				procfile(dir, f, stmt)
 			}
-
 		}
-
 	}
 }
 
 // write FileInfo in database namefile
-func procfile(dir string, file os.FileInfo, TapDb *sql.DB) {
+func procfile(dir string, file os.FileInfo, stmt *sql.Stmt) {
 	id := KeyCounter + 1
 
 	// start transaction
-	tx, err := TapDb.Begin()
-	if err != nil {
-		log.Fatal(err)
-	}
 
-	stmt1, err := tx.Prepare("INSERT INTO namefile (id, serverame, filepath, filename) VALUES (?, ?, ?, ?)")
+	_, err := stmt.Exec(id, filepath.VolumeName(dir), dir, file.Name())
 	if err != nil {
-		log.Fatal(err)
-	}
-	defer stmt1.Close()
-
-	_, err = stmt1.Exec(id, filepath.VolumeName(dir), dir, file.Name())
-	if err != nil {
-		tx.Commit()
 		log.Println("allready entered: " + dir + file.Name())
 		return
 	}
-	/*
-		stmt2, err := tx.Prepare("INSERT INTO keyfile (id, md5, creationtime, filesize) VALUES (?, ?, ?, ?)")
-		if err != nil {
-			log.Fatal(err)
-		}
-		defer stmt2.Close()
-
-		md5, err := util.ComputeMd5(dir + file.Name())
-		_, err = stmt2.Exec(id, fmt.Sprintf("%x", md5), file.ModTime(), file.Size())
-		if err != nil {
-			log.Fatal(err)
-		}
-	*/
 
 	// end transaction
 	KeyCounter = KeyCounter + 1
-	tx.Commit()
 
 	log.Println(dir + file.Name())
 }
