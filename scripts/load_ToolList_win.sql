@@ -20,8 +20,8 @@ INSERT INTO analysetool (toolname,prgfile,prgparam,tmplog,logfile,sysfile) VALUE
 	'Jhove',
 	'c:\Tools\jhove\jhove.bat',
 	'%file% -o %log%',
-	'..\\log\\jhove.log',
-	'..\\log\\jhove_log',
+	'.\\log\\jhove.log',
+	'.\\log\\jhove_log',
 	''
 );
 
@@ -38,9 +38,9 @@ INSERT INTO analysetool (toolname,prgfile,prgparam,tmplog,logfile,sysfile) VALUE
 	'ImageMagick',
 	'C:\\Tools\\ImageMagick-6.9.1-Q16\\identify.exe',
 	' -verbose %file%',
-	'..\\log\\im.log',
-	'..\\log\\imagemagick_log',
-	'..\\log\\imagemagick_sys'
+	'.\\log\\im.log',
+	'.\\log\\imagemagick_log',
+	'.\\log\\imagemagick_sys'
 );
 
 INSERT INTO analysetool (toolname,prgfile,prgparam,tmplog,logfile,sysfile) VALUES (
@@ -49,7 +49,7 @@ INSERT INTO analysetool (toolname,prgfile,prgparam,tmplog,logfile,sysfile) VALUE
 	' -pa %file%',
 	'',
 	'',
-	'..\\log\\exiv2_sys'
+	'.\\log\\exiv2_sys'
 );
 
 INSERT INTO analysetool (toolname,prgfile,prgparam,tmplog,logfile,sysfile) VALUES (
@@ -58,7 +58,7 @@ INSERT INTO analysetool (toolname,prgfile,prgparam,tmplog,logfile,sysfile) VALUE
 	'-b -i %file%',
 	'',
 	'',
-	'..\\log\\file_sys'
+	'.\\log\\file_sys'
 );
 
 SELECT * FROM analysetool;
