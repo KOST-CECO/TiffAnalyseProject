@@ -71,9 +71,12 @@ func analyseAllFile(db *sql.DB) {
 		for rows.Next() {
 			rows.Scan(&id, &path, &name)
 		}
+		log.Println(id)
+
 		file, err := os.Stat(path + name)
 		if err != nil {
 			// end of NAMEFILE
+			log.Fatal(err)
 			return
 		}
 
@@ -86,9 +89,11 @@ func analyseAllFile(db *sql.DB) {
 		// compute MD5 for file entry
 		md5, err := util.ComputeMd5(path + name)
 		md5string := fmt.Sprintf("%x", md5)
+		log.Println(md5string)
 
 		// detect mime tyoe for file entry
 		mimestring, err := util.Detectcontenttype(path + name)
+		log.Println(mimestring)
 
 		stmt1, err := tx.Prepare("INSERT INTO keyfile (md5, creationtime, filesize, pdate, logcounter, mimetype) VALUES (?, ?, ?, DATETIME(), ?, ?)")
 		if err != nil {
