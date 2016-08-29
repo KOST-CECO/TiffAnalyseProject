@@ -52,10 +52,9 @@ func main() {
 
 	// close all open files
 	util.Closelog()
-
 }
 
-// read one file from NAMEFILE, create KEYFILE and start analysing
+// read all files from NAMEFILE, create KEYFILE and start analysing
 func analyseAllFile(db *sql.DB) {
 
 	for {
@@ -71,63 +70,72 @@ func analyseAllFile(db *sql.DB) {
 		for rows.Next() {
 			rows.Scan(&id, &path, &name)
 		}
-		log.Println(id)
 
-		file, err := os.Stat(path + name)
-		if err != nil {
+		if id == 0 {
 			// end of NAMEFILE
-			log.Fatal(err)
+			log.Println("Verarbeitung erfolgreich abgeschlossen")
 			return
 		}
 
-		// start transaction ---------------------------------------------------
-		tx, err := db.Begin()
+		file, err := os.Stat(path + name)
 		if err != nil {
-			log.Fatal(err)
-		}
+			// The system cannot find the file specified
+			log.Println(err)
+			// MD5 -> "00000000000000000000000000000000"
+			ins := fmt.Sprintf("UPDATE namefile SET md5 = '%v' WHERE id = '%v'", "00000000000000000000000000000000", id)
+			_, err = db.Exec(ins)
+			if err != nil {
+				log.Fatal(err)
+			}
 
-		// compute MD5 for file entry
-		md5, err := util.ComputeMd5(path + name)
-		md5string := fmt.Sprintf("%x", md5)
-		log.Println(md5string)
-
-		// detect mime tyoe for file entry
-		mimestring, err := util.Detectcontenttype(path + name)
-		log.Println(mimestring)
-
-		stmt1, err := tx.Prepare("INSERT INTO keyfile (md5, creationtime, filesize, pdate, logcounter, mimetype) VALUES (?, ?, ?, DATETIME(), ?, ?)")
-		if err != nil {
-			log.Fatal(err)
-		}
-		defer stmt1.Close()
-		_, err = stmt1.Exec(md5string, file.ModTime(), file.Size(), util.Logcnt, mimestring)
-		if err != nil {
-			// same file occurse twice in collection
-			// log.Print(err)
 		} else {
-			// start analysing file
-			analyseFile(tx, md5string, path+name)
-		}
+			// start transaction ---------------------------------------------------
+			tx, err := db.Begin()
+			if err != nil {
+				log.Fatal(err)
+			}
 
-		stmt2, err := tx.Prepare("UPDATE namefile SET md5 = ? WHERE id = ?")
-		if err != nil {
-			log.Fatal(err)
-		}
-		defer stmt2.Close()
+			// compute MD5 for file entry
+			md5, err := util.ComputeMd5(path + name)
+			md5string := fmt.Sprintf("%x", md5)
 
-		_, err = stmt2.Exec(md5string, id)
-		if err != nil {
-			log.Fatal(err)
-		}
+			// detect mime tyoe for file entry
+			mimestring, err := util.Detectcontenttype(path + name)
 
-		// end transaction -----------------------------------------------------
-		tx.Commit()
-		util.Maxexec -= 1
+			stmt1, err := tx.Prepare("INSERT INTO keyfile (md5, creationtime, filesize, pdate, logcounter, mimetype) VALUES (?, ?, ?, DATETIME(), ?, ?)")
+			if err != nil {
+				log.Fatal(err)
+			}
+			defer stmt1.Close()
+			_, err = stmt1.Exec(md5string, file.ModTime(), file.Size(), util.Logcnt, mimestring)
+			if err != nil {
+				// same file occurse twice in collection
+				// log.Print(err)
+			} else {
+				// start analysing file
+				analyseFile(tx, md5string, path+name)
+			}
 
-		// logrotation
-		if util.Maxexec == 0 {
-			util.Closelog()
-			util.Regtools(db)
+			stmt2, err := tx.Prepare("UPDATE namefile SET md5 = ? WHERE id = ?")
+			if err != nil {
+				log.Fatal(err)
+			}
+			defer stmt2.Close()
+
+			_, err = stmt2.Exec(md5string, id)
+			if err != nil {
+				log.Fatal(err)
+			}
+
+			// end transaction -----------------------------------------------------
+			tx.Commit()
+			util.Maxexec -= 1
+
+			// logrotation
+			if util.Maxexec == 0 {
+				util.Closelog()
+				util.Regtools(db)
+			}
 		}
 	}
 }
