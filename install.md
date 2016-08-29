@@ -11,6 +11,9 @@ git config http.proxy proxy.edi.admin.ch:8080
 git config --global user.name mkaiser56
 git config --global user.email m.kaiser@access.ch
 git config --global core.editor nedit
+git config --global diff.tool tkdiff
+git config --global merge.tool tkdiff
+git config --global --add difftool.prompt false
 
 # git config --global push.default matching
 git config --global push.default simple
