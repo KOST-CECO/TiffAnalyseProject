@@ -40,7 +40,7 @@ git show v1.4
 git push origin --tags
 
 # -------------------------------------------------------------
-# LINUX Tools installieren
+# LINUX Tools installieren (in dieser Reihenfolge)
 # -------------------------------------------------------------
 # sqlite3 
 sudo apt-get install sqlite3
