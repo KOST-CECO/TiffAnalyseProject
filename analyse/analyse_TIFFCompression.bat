@@ -22,12 +22,12 @@ SET OUT=c:\tmp\dummy.log
 rm -f %OUT%
 
 FOR /F "tokens=*" %%G IN ('dir /b %1\tiffhist*.log') DO (
-	ECHO %%G
+	REM ECHO %%G
 	CAT %1\%%G >> %OUT%
 )
 ECHO.
 ECHO %1
-ECHO Total Compression
+ECHO Total TIFF Files
 grep "259$Compression" %OUT% | wc -l
 ECHO.
 
@@ -51,7 +51,10 @@ ECHO Compression:9 JBIG bw
 grep "259$Compression:9" %OUT% | wc -l
 ECHO Compression:10 JBIG color
 grep "259$Compression:10" %OUT% | wc -l
-ECHO Compression:PackBits JBIG color
+ECHO Compression:32773 PackBits
 grep "259$Compression:32773" %OUT% | wc -l
+ECHO other Compression Tags
+grep -v "259\$Compression\:[0-9]" c:\tmp\dummy.log | grep -v "259$Compression:32773" | grep "259Compression:" | wc -l
+ECHO.
 
 rm %OUT%
